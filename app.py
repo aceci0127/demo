@@ -269,7 +269,7 @@ def execute_final_cypher_query(query):
 # ----------- Streamlit UI & main logic -----------
 
 def main():
-    st.title("ATHENA | PACKAGING")
+    st.title("ATHENA | ")
 
     # 1) Let the user type a query
     user_query = st.text_input("Ask Athena: ")
