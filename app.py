@@ -269,29 +269,43 @@ def execute_final_cypher_query(query):
 # ----------- Streamlit UI & main logic -----------
 
 def main():
-    st.title("ATHENA | ")
+    st.title("ATHENA | Chatbot")
 
-    # 1) Let the user type a query
-    user_query = st.text_input("Ask Athena: ")
+    # Initialize the conversation if not present
+    if 'conversation' not in st.session_state:
+        st.session_state.conversation = []
 
-    # 2) On button click, run the pipeline
+    # Display existing conversation
+    for msg in st.session_state.conversation:
+        with st.chat_message(msg["role"]):
+            st.markdown(msg["content"])
+
+    # User inputs a question via text_input
+    user_query = st.text_input("Ask Athena:")
+
+    # On button click, run the pipeline
     if st.button("Submit"):
         if user_query.strip():
+            # 1) Show the user's query as a chat bubble
+            with st.chat_message("user"):
+                st.markdown(user_query)
+
+            # Save user message in session state
+            st.session_state.conversation.append({"role": "user", "content": user_query})
+
+            # 2) Run your pipeline
             with st.spinner("Thinking..."):
-                # Generate the final Cypher query
                 final_query = generate_final_cypher(user_query, PROMPT_LLMentity_Extractor)
-
-                # Execute the Cypher query
                 graphd_results = execute_final_cypher_query(final_query)
-
-                # Perform Pinecone vector search
                 vectord_results = perform_search(user_query, index)
-
-                # Obtain final response from LLM
                 response = perform_response(user_query, vectord_results, graphd_results, PROMPT_answer)
 
-            st.success("Assistant:")
-            st.write(response)
+            # 3) Display the assistant's answer
+            with st.chat_message("assistant"):
+                st.markdown(response)
+
+            # Append assistant response to conversation
+            st.session_state.conversation.append({"role": "assistant", "content": response})
         else:
             st.warning("Please enter a question before submitting.")
 
