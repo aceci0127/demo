@@ -268,24 +268,23 @@ def execute_final_cypher_query(query):
 
 # ----------- Streamlit UI & main logic -----------
 
-def main():
-    st.title("ATHENA | Chatbot")
 
-    # Initialize the conversation if not present
-    if 'conversation' not in st.session_state:
-        st.session_state.conversation = []
+st.title("ATHENA | Chatbot")
 
-    # Display existing conversation
-    for msg in st.session_state.conversation:
-        with st.chat_message(msg["role"]):
-            st.markdown(msg["content"])
+# Initialize the conversation if not present
+if 'conversation' not in st.session_state:
+    st.session_state.conversation = []
 
-    # User inputs a question via text_input
-    user_query = st.text_input("Ask Athena:")
+# Display existing conversation
+for msg in st.session_state.conversation:
+    with st.chat_message(msg["role"]):
+        st.markdown(msg["content"])
+
+# User inputs a question via text_input
+user_query = st.text_input("Ask Athena:")
 
     # On button click, run the pipeline
-    if st.button("Submit"):
-        if user_query.strip():
+if prompt := st.chat_input("Ask frenchbot anything..."):
             # 1) Show the user's query as a chat bubble
             with st.chat_message("user"):
                 st.markdown(user_query)
@@ -306,8 +305,5 @@ def main():
 
             # Append assistant response to conversation
             st.session_state.conversation.append({"role": "assistant", "content": response})
-        else:
-            st.warning("Please enter a question before submitting.")
-
-if __name__ == "__main__":
-    main()
+else:
+    st.warning("Please enter a question before submitting.")
