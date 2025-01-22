@@ -99,7 +99,7 @@ class AthenaSearch:
         vec = self.perform_embedding(input_text)
         query_results = index.query(
             vector=vec,
-            top_k=6,
+            top_k=10,
             include_values=False,
             include_metadata=True
         )
@@ -111,7 +111,7 @@ class AthenaSearch:
         vec = self.perform_embedding(input_text)
         query_results = index.query(
             vector=vec,
-            top_k=6,
+            top_k=10,
             include_values=False,
             include_metadata=True
         )
@@ -268,13 +268,16 @@ class AthenaSearch:
             self.user_query, 
             self.PROMPT_LLMentity_Extractor
         )
+        print("Entities Extracted:", entities_generated)
         list_of_entity = [item.strip() for item in entities_generated.strip("[]").split(",")]
+        print("List of Entities:", list_of_entity)
         
         # 2. Build a dictionary of known embeddings from Neo4j
         embeddings_dict = self.generate_embed_dictionary()
         
         # 3. Extract the best matching known entities from the user’s entity list
         entities_extracted = self.extract_entities(list_of_entity, embeddings_dict)
+        print("Entities Extracted:", entities_extracted)
         
         # 4. Generate a Cypher query
         cypher_query = self.generate_cypher(
@@ -282,15 +285,18 @@ class AthenaSearch:
             self.PROMPT_CYPHER_QUERY_BUILDER, 
             entities_extracted
         )
+        print("Cypher Query Generated:", cypher_query)
         
         # 5. Execute the Cypher query and get a single ID result from the graph
         graph_id_result = self.execute_query(cypher_query)
+        print("Graph ID Result:", graph_id_result)
         
         # 6. Get top IDs from abstract index
         abstract_ids = self.perform_search_id(
             self.user_query, 
             self.index_abstract
         )
+        print("Abstract IDs:", abstract_ids)
         
         # 7. Combine the two sets of IDs (remove duplicates)
         combined_ids = list(set(abstract_ids + [graph_id_result]))
@@ -301,6 +307,7 @@ class AthenaSearch:
             self.index_body, 
             combined_ids
         )
+        print("Final Results:", final_results)
         
         # 9. Generate final response
         athena_response = self.perform_response(
@@ -310,21 +317,3 @@ class AthenaSearch:
         )
         
         return athena_response
-
-
-# ---------------
-# EXAMPLE USAGE:
-# ---------------
-#
-# Assuming you have already created Pinecone index objects `index_body` and 
-# `index_abstract` in your main script, you can do something like:
-#
-# user_query = "Which are the possible applications of Lignocellulosic bioplastics?"
-# 
-# # Suppose you have your Pinecone index references: index_body, index_abstract
-# 
-# athena_instance = AthenaSearch(user_query, index_body, index_abstract)
-# answer = athena_instance.run_pipeline()
-# print(answer)
-#
-# That’s it. You can further customize or split out methods as needed.
