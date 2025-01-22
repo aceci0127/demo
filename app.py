@@ -280,24 +280,21 @@ for msg in st.session_state.conversation:
     with st.chat_message(msg["role"]):
         st.markdown(msg["content"])
 
-# User inputs a question via text_input
-user_query = st.text_input("Ask Athena:")
-
     # On button click, run the pipeline
-if prompt := st.chat_input("Ask frenchbot anything..."):
+if prompt := st.chat_input("Ask Athena:"):
             # 1) Show the user's query as a chat bubble
             with st.chat_message("user"):
-                st.markdown(user_query)
+                st.markdown(prompt)
 
             # Save user message in session state
-            st.session_state.conversation.append({"role": "user", "content": user_query})
+            st.session_state.conversation.append({"role": "user", "content": prompt})
 
             # 2) Run your pipeline
             with st.spinner("Thinking..."):
-                final_query = generate_final_cypher(user_query, PROMPT_LLMentity_Extractor)
+                final_query = generate_final_cypher(prompt, PROMPT_LLMentity_Extractor)
                 graphd_results = execute_final_cypher_query(final_query)
-                vectord_results = perform_search(user_query, index)
-                response = perform_response(user_query, vectord_results, graphd_results, PROMPT_answer)
+                vectord_results = perform_search(prompt, index)
+                response = perform_response(prompt, vectord_results, graphd_results, PROMPT_answer)
 
             # 3) Display the assistant's answer
             with st.chat_message("assistant"):
