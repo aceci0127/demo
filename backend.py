@@ -19,10 +19,6 @@ class AthenaSearch:
         # Store user query
         self.user_query = user_query
         
-        # Pinecone indexes passed in by the user
-        self.index_body = index_body
-        self.index_abstract = index_abstract
-        
         # Environment variables
         self.OPENAI_API_KEY = st.secrets['OPENAI_API_KEY']
         self.DEEPSEEK_API_KEY = st.secrets['DEEPSEEK_API_KEY']
@@ -37,6 +33,10 @@ class AthenaSearch:
         
         # Pinecone client
         self.pc = Pinecone(api_key=self.PINECONE_API_KEY)
+
+        # Pinecone indexes passed in by the user
+        self.index_body = self.pc.Index(index_body)
+        self.index_abstract = self.pc.Index(index_abstract)
         
         # Neo4j Setup
         AURA_DB_URI = "neo4j+s://2886f391.databases.neo4j.io"

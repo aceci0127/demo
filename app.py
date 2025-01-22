@@ -1,9 +1,6 @@
 from backend import AthenaSearch
 import streamlit as st
 
-index_body = "papers-body-packaging"
-index_abstract = "papers-abstracts"
-
 # ----------- Streamlit UI & main logic -----------
 
 
