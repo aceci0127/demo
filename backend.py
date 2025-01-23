@@ -95,7 +95,7 @@ class AthenaSearch:
             return None
     
     def perform_search_for_entity(self, input_text, index):
-        vec = self.perform_embedding(input_text)  # Get the embedding vector for the input text
+        vec = self.perform_embedding_for_entity(input_text)  # Get the embedding vector for the input text
         query_results = index.query(
             vector=vec,  # Use the embedding vector for the search
             top_k=1,  # Return the top 2 matches
