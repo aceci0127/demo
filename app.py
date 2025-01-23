@@ -6,8 +6,8 @@ index_body = "papers-body-packaging"
 index_abstract = "papers-abstracts"
 
 # ----------- Streamlit UI & main logic -----------
-st.title("A T H E N A | Packaging DEMO - ENGLISH ONLY🇬🇧")
-st.info("Welcome to *ATHENA*, the AI-powered search engine for scientific papers on Packaging. The dataset is composed of only 100 scientific papers.")
+st.title("A T H E N A | Packaging DEMO")
+st.info("Welcome to *ATHENA*, the AI-powered search engine for scientific papers on Packaging. The dataset is composed of only 100 scientific papers.  - ENGLISH ONLY🇬🇧")
 
 # Initialize the conversation if not present
 if 'conversation' not in st.session_state:
