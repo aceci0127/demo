@@ -63,6 +63,24 @@ class AthenaSearch:
         with open("prompts/HISTORY.txt", "r") as file:
             self.HISTORY = file.read()
 
+    def rerank_results(self, query, docs):
+        rerank_name = "cohere-rerank-3.5"
+        rerank_docs = self.pc.inference.rerank(
+            model=rerank_name,
+            query=query,
+            documents=docs,
+            top_n=15,
+            return_documents=True
+        )
+        ids = [doc["document"]["id"] for doc in rerank_docs.data]
+        text = [doc["document"]["text"] for doc in rerank_docs.data]
+        title = [doc["document"]["title"] for doc in rerank_docs.data]
+        docs = [
+            {"id": i, "text": txt, "title": tit}
+            for i, txt, tit in zip(ids, text, title)
+        ]
+        return docs
+
     def generate_history(self, query, conversation, prompt):
         """Regenerate the user query based on the previous conversation and context."""
         response = self.client_openai.chat.completions.create(
@@ -294,7 +312,8 @@ class AthenaSearch:
         6. Perform abstract-level ID search
         7. Combine IDs
         8. Filter Body index search by those IDs
-        9. Generate final response
+        9. Rerank results
+        10. Generate final response
         """
         print("User Query:", self.user_query)
 
@@ -350,11 +369,14 @@ class AthenaSearch:
             combined_ids
         )
         print("Final Results:", final_results)
+
+        # 9. Rerank results
+        reranked_results = self.rerank_results(regenerated_query, final_results)
         
-        # 9. Generate final response
+        # 10. Generate final response
         athena_response = self.perform_response(
             regenerated_query, 
-            final_results, 
+            reranked_results, 
             self.PROMPT_answer
         )
         
