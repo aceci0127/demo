@@ -263,6 +263,7 @@ class AthenaSearch:
         6. Filter Body index search by those IDs
         7. Generate final response
         """
+        print("User Query:", self.user_query)
         # 1. Extract Entities
         entities_generated = self.generate_entities(
             self.user_query, 
