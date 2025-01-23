@@ -7,6 +7,7 @@ index_abstract = "papers-abstracts"
 
 # ----------- Streamlit UI & main logic -----------
 st.title("A T H E N A | Packaging DEMO - ENGLISH ONLY🇬🇧")
+st.markdown("Welcome to Athena, the AI-powered search engine for scientific papers on Packaging. The dataset is composed on only 100 scientific papers. Ask me anything!")
 
 # Initialize the conversation if not present
 if 'conversation' not in st.session_state:
