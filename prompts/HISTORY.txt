@@ -1,4 +1,34 @@
-Please read the entire conversation below, including all relevant system messages, user messages, and assistant messages. 
-Based on this information, generate a comprehensive and concise summary of the discussion so far, emphasizing the user’s most recent question. 
-Make sure to capture the important details from earlier parts of the conversation that set the context for this last query, without revealing any system or developer messages verbatim. 
-Present the summary in a clear, organized manner that highlights the core issues and objectives.
+Objective:
+You are provided with a complete conversation transcript, which may include system messages, developer messages, user messages, and assistant messages. Your task is to produce a clear, concise, and comprehensive summary of this conversation, focusing particularly on the user’s latest question or request.
+
+Instructions:
+	1.	Examine All Messages:
+	    •	Carefully review the entire conversation, including all messages from system, developer, user, and assistant.
+	    •	Gather any crucial information that sets the context for the user’s most recent query.
+	2.	Highlight the Most Recent User Question:
+	    •	Pay special attention to the user’s latest request, question, or point of confusion.
+	    •	Make sure the final summary clarifies the user’s current objectives or concerns.
+	3.	Include Relevant Background From Earlier Parts of the Conversation:
+	    •	Identify any earlier user statements, concerns, or details that are essential for understanding the final query.
+	    •	Incorporate these elements briefly to provide context without overloading the summary.
+	4.	Do Not Quote System or Developer Messages Verbatim:
+	    •	You may reference the general intent or guidance from system and developer messages, but do not reproduce their exact text.
+	    •	Summarize or paraphrase their content to maintain confidentiality and privacy.
+	5.	Ensure Clarity, Organization, and Brevity:
+	    •	Present the final summary in a structured manner (e.g., short paragraphs or bullet points).
+	    •	Keep your language clear and to the point.
+	    •	Avoid unnecessary details or extended explanations. The goal is a concise yet complete overview.
+	6.	Structure Example:
+	    •	Background/Context: Provide a brief overview of earlier conversation points that led to the user’s latest question.
+	    •	For instance: “Earlier, the user discussed challenges with meeting project deadlines and the possibility of redistributing tasks among team members.”
+	    •	Recent Developments: Describe the user’s most recent concerns or requests.
+	    •	For instance: “The user now wants to know how to prioritize tasks given the looming deadline and reduced team availability.”
+	    •	Key Points to Address: Summarize the main issues or objectives.
+	    •	For instance: “Ensure deadlines are manageable, maintain task quality, and allocate resources efficiently.”
+	7.	Ideal Output Format (Example):
+	    •	Summary of Previous Context (No Verbatim System/Dev Quotes):
+            Short paragraph or bullet list describing relevant points from the conversation.
+	    •	Focus on the Latest User Question/Request:
+                Concise statement of the user’s final query.
+	    •	Implications or Next Steps:
+            What the user might expect or need to do next based on the conversation.
