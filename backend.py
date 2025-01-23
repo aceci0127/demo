@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 import streamlit as st
 
 class AthenaSearch:
-    def __init__(self, user_query, index_body, index_abstract, conversation=""):
+    def __init__(self, user_query, index_body, index_abstract, index_entity, conversation=""):
         """
         Class constructor that sets up environment variables,
         loads prompt files, initializes clients (OpenAI, DeepSeek, Neo4j, etc.),
@@ -38,6 +38,7 @@ class AthenaSearch:
         # Pinecone indexes passed in by the user
         self.index_body = self.pc.Index(index_body)
         self.index_abstract = self.pc.Index(index_abstract)
+        self.index_entity = self.pc.Index(index_entity)
         
         # Neo4j Setup
         AURA_DB_URI = "neo4j+s://2886f391.databases.neo4j.io"
@@ -80,6 +81,34 @@ class AthenaSearch:
             for i, txt, tit in zip(ids, text, title)
         ]
         return docs
+    
+    def perform_embedding_for_entity(self, text, model="text-embedding-3-small"):
+        # Ensure the input text is a string
+        if not isinstance(text, str):
+            text = str(text)
+        try:
+            # Create an embedding vector using OpenAI's embedding model
+            response = self.client_openai.embeddings.create(input=text, model=model)
+            vector = response.data[0].embedding
+            return vector
+        except Exception as e:
+            return None
+    
+    def perform_search_for_entity(self, input_text, index):
+        vec = self.perform_embedding(input_text)  # Get the embedding vector for the input text
+        query_results = index.query(
+            vector=vec,  # Use the embedding vector for the search
+            top_k=1,  # Return the top 2 matches
+            include_values=False,
+            include_metadata=True)
+        # Extract metadata text and scores from the query results
+        name = [match['metadata']['Entity Name'] for match in query_results['matches']]
+        type = [match['metadata']['Entity Type'] for match in query_results['matches']]
+        doc = [
+            {"Entity Name: ": i, "Entity Type: ": txt}
+            for i, txt in zip(name, type)
+        ]
+        return doc
 
     def generate_history(self, query, conversation, prompt):
         """Regenerate the user query based on the previous conversation and context."""
@@ -179,109 +208,6 @@ class AthenaSearch:
         )
         return response.choices[0].message.content
 
-    def generate_embed_dictionary(self):
-        """Pull existing embeddings from Neo4j for Materials, Topics, Applications."""
-        CYPHER_MATERIAL = """ 
-            MATCH (material:Material)
-            RETURN material.embedding AS embedding, material.name AS name
-        """
-        CYPHER_TOPIC = """ 
-            MATCH (topic:Topic)
-            RETURN topic.embedding AS embedding, topic.name AS name
-        """
-        CYPHER_APPLICATION = """ 
-            MATCH (application:Application)
-            RETURN application.embedding AS embedding, application.name AS name
-        """
-
-        list_embeddings = []
-        list_names = []
-        list_entities = []
-
-        with self.driver.session() as session:
-            result = session.run(CYPHER_MATERIAL)
-            for record in result:
-                list_embeddings.append(record['embedding'])
-                list_names.append(record['name'])
-                list_entities.append('Material')
-
-        with self.driver.session() as session:
-            result = session.run(CYPHER_TOPIC)
-            for record in result:
-                list_embeddings.append(record['embedding'])
-                list_names.append(record['name'])
-                list_entities.append('Topic')
-
-        with self.driver.session() as session:
-            result = session.run(CYPHER_APPLICATION)
-            for record in result:
-                list_embeddings.append(record['embedding'])
-                list_names.append(record['name'])
-                list_entities.append('Application')
-
-        # Dictionary of names, embeddings, and entity type
-        return {
-            "name": list_names,
-            "embedding": list_embeddings,
-            "entity type": list_entities
-        }
-
-    def extract_entities(self, list_of_entities, embeddings_dict):
-        """
-        Takes a list of entity strings and attempts to map them to the best matching
-        known entity from the Neo4j embedding dictionary.
-        """
-        extracted = ""
-        
-        for entity in list_of_entities:
-            # Perform embedding using smaller model for each entity
-            embedded_query = self.perform_embedding(entity, model="text-embedding-3-small")
-
-            def parse_embeddings(embeddings):
-                return [
-                    json.loads(emb) if isinstance(emb, str) else emb 
-                    for emb in embeddings
-                ]
-
-            # Parse the embeddings stored in the dictionary
-            parsed_embeddings = parse_embeddings(embeddings_dict["embedding"])
-            names = embeddings_dict["name"]
-            entity_types = embeddings_dict["entity type"]
-
-            # Make sure the query vector is also parsed if it's a string
-            query_vec = (
-                json.loads(embedded_query) 
-                if isinstance(embedded_query, str) 
-                else embedded_query
-            )
-
-            # Cosine similarity function
-            def cosine_similarity(vec1, vec2):
-                v1, v2 = np.array(vec1), np.array(vec2)
-                return np.dot(v1, v2) / (np.linalg.norm(v1) * np.linalg.norm(v2))
-
-            similarities = []
-            for name_val, emb in zip(names, parsed_embeddings):
-                sim_score = cosine_similarity(emb, query_vec)
-                similarities.append({"name": name_val, "similarity": sim_score})
-            
-            # Sort by highest similarity
-            similarities.sort(key=lambda x: x["similarity"], reverse=True)
-
-            # Get top 3
-            top3 = similarities[:3]
-            # Display info (optional to keep or remove)
-            print("Top 3 matches for entity:", entity)
-            for i, item in enumerate(top3):
-                idx_name = names.index(item['name'])
-                print(f"({i+1}) Name: {item['name']}, Similarity: {item['similarity']:.4f}, Entity Type: {entity_types[idx_name]}")
-
-            best_match_name = top3[0]['name']
-            best_match_type = entity_types[names.index(best_match_name)]
-            extracted += f"Entity Name: {best_match_name}\nEntity type is: {best_match_type}\n"
-
-        return extracted
-
     def execute_query(self, query):
         """Executes a Cypher query in Neo4j and returns the first paper_id result found."""
         with self.driver.session() as session:
@@ -332,13 +258,12 @@ class AthenaSearch:
         print("Entities Extracted:", entities_generated)
         list_of_entity = [item.strip() for item in entities_generated.strip("[]").split(",")]
         print("List of Entities:", list_of_entity)
-        
-        # 3.1. Build a dictionary of known embeddings from Neo4j
-        embeddings_dict = self.generate_embed_dictionary()
-        
-        # 3.2. Extract the best matching known entities from the user’s entity list
-        entities_extracted = self.extract_entities(list_of_entity, embeddings_dict)
-        print("Entities Extracted:", entities_extracted)
+
+        #3.1 Extract entities
+        entities_extracted = ""
+        for i in list_of_entity:
+            entity = self.perform_search_for_entity(i, self.index_entity)
+            entities_extracted = entities_extracted + str(entity)
         
         # 4. Generate a Cypher query
         cypher_query = self.generate_cypher(

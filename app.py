@@ -4,6 +4,7 @@ import time
 
 index_body = "papers-body-packaging"
 index_abstract = "papers-abstracts"
+index_entity = "papers-entity-embeddings"
 
 # ----------- Streamlit UI & main logic -----------
 st.image("images/Logo.png", width=100)
@@ -37,7 +38,7 @@ if prompt := st.chat_input("Ask Athena:"):
         start_time = time.time()  # Record the start time
         
         # PIPELINE FROM BACKEND
-        athena_instance = AthenaSearch(prompt, index_body, index_abstract, st.session_state.conversation)
+        athena_instance = AthenaSearch(prompt, index_body, index_abstract, index_entity, st.session_state.conversation)
         answer, paper_id = athena_instance.run_pipeline()
   # Assume the pipeline returns answer and paper_id
 
