@@ -55,7 +55,8 @@ if prompt := st.chat_input("Ask Athena:"):
         
         # PIPELINE FROM BACKEND
         athena_instance = AthenaSearch(prompt, index_body, index_abstract)
-        answer, paper_id = athena_instance.run_pipeline()  # Assume the pipeline returns answer and paper_id
+        answer, paper_id = athena_instance.run_pipeline()
+  # Assume the pipeline returns answer and paper_id
 
         end_time = time.time()  # Record the end time
         response_time = end_time - start_time  # Calculate response time

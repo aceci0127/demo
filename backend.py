@@ -316,4 +316,4 @@ class AthenaSearch:
             self.PROMPT_answer
         )
         
-        return athena_response
+        return athena_response, combined_ids
