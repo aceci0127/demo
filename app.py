@@ -48,6 +48,7 @@ if prompt := st.chat_input("Ask Athena:"):
     # 3) Display the assistant's answer
     with st.chat_message("ai"):
         st.markdown(answer)
+        
 
     # Append assistant response to conversation
     st.session_state.conversation.append({"role": "ai", "content": answer})
