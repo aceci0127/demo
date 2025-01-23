@@ -233,6 +233,7 @@ class AthenaSearch:
         1. Generate conversation history
         2. Regenerate user query
         3. Extract entities
+            3.1 Search for entities in the entity index
         4. Generate a Cypher query
         5. Execute query in Neo4j
         6. Perform abstract-level ID search
@@ -259,7 +260,7 @@ class AthenaSearch:
         list_of_entity = [item.strip() for item in entities_generated.strip("[]").split(",")]
         print("List of Entities:", list_of_entity)
 
-        #3.1 Extract entities
+        #3.1 Search for entities in the entity index
         entities_extracted = ""
         for i in list_of_entity:
             entity = self.perform_search_for_entity(i, self.index_entity)
