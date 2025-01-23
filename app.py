@@ -6,7 +6,7 @@ index_body = "papers-body-packaging"
 index_abstract = "papers-abstracts"
 
 # ----------- Streamlit UI & main logic -----------
-st.image("images/Logo.png", width=78)
+st.image("images/Logo.png", width=100)
 st.title("A T H E N A | Packaging DEMO")
 st.info("Welcome to *ATHENA*, the AI-powered search engine for scientific papers on Packaging. The dataset is composed of only 100 scientific papers.  - ENGLISH ONLY🇬🇧")
 
