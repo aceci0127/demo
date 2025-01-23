@@ -235,8 +235,8 @@ class AthenaSearch:
         3. Extract entities
             3.1 Search for entities in the entity index
         4. Generate a Cypher query
-        5. Execute query in Neo4j
-        6. Perform abstract-level ID search
+        5. Execute query in Neo4j to retrieve IDs
+        6. Perform abstract-level Vector IDs search
         7. Combine IDs
         8. Filter Body index search by those IDs
         9. Rerank results
