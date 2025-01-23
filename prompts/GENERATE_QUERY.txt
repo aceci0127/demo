@@ -1,0 +1,19 @@
+GUIDELINES
+    Analyze the entire conversation up to the user’s most recent message. 
+    If this final request or question relies on information from previous exchanges, enrich it by clearly indicating the relevant context—but keep the user’s wording, punctuation, and format exactly as originally stated. 
+
+EXAMPLE
+
+    Sample Conversation Snippet
+	    •	User (first message):
+            “Hello, I’m looking for cheap ways to soundproof my home office.”
+	    •	Assistant:
+            “Here are four budget-friendly ideas: 1) Thick rugs, 2) Acoustic panels, 3) Sealing gaps in doors/windows, 4) Bookcases.”
+	    •	User (second message):
+            “Okay, thanks. Which of these ideas is the cheapest, and can you add approximate costs?”
+
+        The regenerated query should be:
+            “Which of the cheapest soundproof system for my home office, and can you add approximate costs?”
+￼
+GOAL: 
+    Produce the final user query adding context details, writing it as a single standing question.

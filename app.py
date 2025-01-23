@@ -1,35 +1,16 @@
 from backend import AthenaSearch
 import streamlit as st
+import time
 
 index_body = "papers-body-packaging"
 index_abstract = "papers-abstracts"
 
 # ----------- Streamlit UI & main logic -----------
-
-
 st.title("ATHENA | Packaging DEMO")
 
 # Initialize the conversation if not present
 if 'conversation' not in st.session_state:
     st.session_state.conversation = []
-
-import csv
-import time
-import os
-
-# File path for analytics
-analytics_file = "analytics.csv"
-
-# Function to initialize the analytics file if not present
-def initialize_analytics_file():
-    if not os.path.exists(analytics_file):
-        with open(analytics_file, mode='w', newline='', encoding='utf-8') as file:
-            writer = csv.writer(file)
-            # Write the header
-            writer.writerow(["paper_id", "question", "answer", "response_time (s)"])
-
-# Call the initializer to ensure file exists
-initialize_analytics_file()
 
 # Initialize the conversation if not present
 if 'conversation' not in st.session_state:
@@ -54,7 +35,7 @@ if prompt := st.chat_input("Ask Athena:"):
         start_time = time.time()  # Record the start time
         
         # PIPELINE FROM BACKEND
-        athena_instance = AthenaSearch(prompt, index_body, index_abstract)
+        athena_instance = AthenaSearch(prompt, index_body, index_abstract, st.session_state.conversation)
         answer, paper_id = athena_instance.run_pipeline()
   # Assume the pipeline returns answer and paper_id
 
@@ -67,17 +48,6 @@ if prompt := st.chat_input("Ask Athena:"):
 
     # Append assistant response to conversation
     st.session_state.conversation.append({"role": "ai", "content": answer})
-
-    # Save analytics data
-    analytics_data = {
-        "paper_id": paper_id,
-        "question": prompt,
-        "answer": answer,
-        "response_time (s)": round(response_time, 2),
-    }
-    with open(analytics_file, mode='a', newline='', encoding='utf-8') as file:
-        writer = csv.DictWriter(file, fieldnames=["paper_id", "question", "answer", "response_time (s)"])
-        writer.writerow(analytics_data)
 
 else:
     st.warning("Please enter a question before submitting.")

@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 import streamlit as st
 
 class AthenaSearch:
-    def __init__(self, user_query, index_body, index_abstract):
+    def __init__(self, user_query, index_body, index_abstract, conversation=""):
         """
         Class constructor that sets up environment variables,
         loads prompt files, initializes clients (OpenAI, DeepSeek, Neo4j, etc.),
@@ -16,8 +16,9 @@ class AthenaSearch:
         """
         load_dotenv()
         
-        # Store user query
+        # Store user query and conversation
         self.user_query = user_query
+        self.conversation = conversation
         
         # Environment variables
         self.OPENAI_API_KEY = st.secrets['OPENAI_API_KEY']
@@ -55,6 +56,36 @@ class AthenaSearch:
 
         with open("prompts/ANSWER.txt", "r") as file:
             self.PROMPT_answer = file.read()
+        
+        with open("prompts/GENERATE_QUERY.txt", "r") as file:
+            self.REGENERATE_QUERY = file.read()
+        
+        with open("prompts/HISTORY.txt", "r") as file:
+            self.HISTORY = file.read()
+
+    def generate_history(self, query, conversation, prompt):
+        """Regenerate the user query based on the previous conversation and context."""
+        response = self.client_openai.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {"role": "system", "content": f"{prompt}"},
+                {"role": "user", "content": f"\n\n\n-----QUERY:{query}\n\n------CONVERSATION HISTORY:{conversation}."}
+            ],
+            temperature=0.1
+        )
+        return response.choices[0].message.content
+
+    def regenerate_query(self, query, conversation, prompt):
+        """Regenerate the user query based on the previous conversation and context."""
+        response = self.client_openai.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {"role": "system", "content": f"{prompt}"},
+                {"role": "user", "content": f"\n\n\n-----QUERY:{query}\n\n------CONVERSATION HISTORY:{conversation}."}
+            ],
+            temperature=0.1
+        )
+        return response.choices[0].message.content
 
     def generate_cypher(self, query, prompt, entities):
         """Use the DeepSeek model to generate a Cypher query based on the user query and extracted entities."""
@@ -255,16 +286,26 @@ class AthenaSearch:
     def run_pipeline(self):
         """
         High-level method that runs the entire pipeline:
-        1. Extract entities
-        2. Generate a Cypher query
-        3. Execute query in Neo4j
-        4. Perform abstract-level ID search
-        5. Combine IDs
-        6. Filter Body index search by those IDs
-        7. Generate final response
+        1. Generate conversation history
+        2. Regenerate user query
+        3. Extract entities
+        4. Generate a Cypher query
+        5. Execute query in Neo4j
+        6. Perform abstract-level ID search
+        7. Combine IDs
+        8. Filter Body index search by those IDs
+        9. Generate final response
         """
         print("User Query:", self.user_query)
-        # 1. Extract Entities
+
+        # 1. Generate conversation history
+        conversation_history = self.generate_history(self.user_query, self.conversation, self.HISTORY)
+
+        # 2. Regenerate user query
+        regenerated_query = self.regenerate_query(self.user_query, conversation_history, self.REGENERATE_QUERY)
+        print("Regenerated Query:", regenerated_query)
+
+        # 3. Extract Entities
         entities_generated = self.generate_entities(
             self.user_query, 
             self.PROMPT_LLMentity_Extractor
@@ -273,16 +314,16 @@ class AthenaSearch:
         list_of_entity = [item.strip() for item in entities_generated.strip("[]").split(",")]
         print("List of Entities:", list_of_entity)
         
-        # 2. Build a dictionary of known embeddings from Neo4j
+        # 3.1. Build a dictionary of known embeddings from Neo4j
         embeddings_dict = self.generate_embed_dictionary()
         
-        # 3. Extract the best matching known entities from the user’s entity list
+        # 3.2. Extract the best matching known entities from the user’s entity list
         entities_extracted = self.extract_entities(list_of_entity, embeddings_dict)
         print("Entities Extracted:", entities_extracted)
         
         # 4. Generate a Cypher query
         cypher_query = self.generate_cypher(
-            self.user_query, 
+            regenerated_query, 
             self.PROMPT_CYPHER_QUERY_BUILDER, 
             entities_extracted
         )
@@ -294,7 +335,7 @@ class AthenaSearch:
         
         # 6. Get top IDs from abstract index
         abstract_ids = self.perform_search_id(
-            self.user_query, 
+            regenerated_query, 
             self.index_abstract
         )
         print("Abstract IDs:", abstract_ids)
@@ -304,7 +345,7 @@ class AthenaSearch:
         
         # 8. Filter body index search by combined IDs
         final_results = self.perform_search_with_filters(
-            self.user_query, 
+            regenerated_query, 
             self.index_body, 
             combined_ids
         )
@@ -312,7 +353,7 @@ class AthenaSearch:
         
         # 9. Generate final response
         athena_response = self.perform_response(
-            self.user_query, 
+            regenerated_query, 
             final_results, 
             self.PROMPT_answer
         )

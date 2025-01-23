@@ -1,0 +1,4 @@
+Please read the entire conversation below, including all relevant system messages, user messages, and assistant messages. 
+Based on this information, generate a comprehensive and concise summary of the discussion so far, emphasizing the user’s most recent question. 
+Make sure to capture the important details from earlier parts of the conversation that set the context for this last query, without revealing any system or developer messages verbatim. 
+Present the summary in a clear, organized manner that highlights the core issues and objectives.
