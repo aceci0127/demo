@@ -199,7 +199,7 @@ class AthenaSearch:
     def perform_response(self, query, results, prompt):
         """Generate a final response (GPT-based) using the retrieved texts and user query."""
         response = self.client_openai.chat.completions.create(
-            model="gpt-4o-mini",
+            model="deepseek-reasoner",
             messages=[
                 {"role": "system", "content": f"{prompt}"},
                 {"role": "user", "content": f"\n\n\n-----QUERY:{query}\n\n------VECTOR RESULTS:{results}."}
