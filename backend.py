@@ -70,7 +70,7 @@ class AthenaSearch:
             model=rerank_name,
             query=query,
             documents=docs,
-            top_n=15,
+            top_n=10,
             return_documents=True
         )
         ids = [doc["document"]["id"] for doc in rerank_docs.data]
@@ -98,7 +98,7 @@ class AthenaSearch:
         vec = self.perform_embedding_for_entity(input_text)  # Get the embedding vector for the input text
         query_results = index.query(
             vector=vec,  # Use the embedding vector for the search
-            top_k=1,  # Return the top 2 matches
+            top_k=10,  # Return the top 2 matches
             include_values=False,
             include_metadata=True)
         # Extract metadata text and scores from the query results
