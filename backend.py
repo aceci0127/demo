@@ -287,14 +287,13 @@ class AthenaSearch:
         
         # 7. Combine the two sets of IDs (remove duplicates)
         combined_ids = list(set(abstract_ids + [graph_id_result]))
-
-        combined_ids = [doc_id for doc_id in (combined_ids) if doc_id is not None]
+        filtered_urls = [url for url in combined_ids if url is not None]
         
         # 8. Filter body index search by combined IDs
         final_results = self.perform_search_with_filters(
             regenerated_query, 
             self.index_body, 
-            combined_ids
+            filtered_urls
         )
         print("Final Results:", final_results)
 
