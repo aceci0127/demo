@@ -63,6 +63,12 @@ class AthenaSearch:
         
         with open("prompts/HISTORY.txt", "r") as file:
             self.HISTORY = file.read()
+        
+        with open("prompts/ABSTRACTLEVELQUERY.txt", "r") as file:
+            self.ABSLEVQUERY = file.read()
+        
+        with open("prompts/TEXTLEVELQUERY.txt", "r") as file:
+            self.TXTLEVQUERY = file.read()
 
     def rerank_results(self, query, docs):
         rerank_name = "cohere-rerank-3.5"
@@ -129,6 +135,18 @@ class AthenaSearch:
             messages=[
                 {"role": "system", "content": f"{prompt}"},
                 {"role": "user", "content": f"\n\n\n-----QUERY:{query}\n\n------CONVERSATION HISTORY:{conversation}."}
+            ],
+            temperature=0.1
+        )
+        return response.choices[0].message.content
+    
+    def regenerate_query_DEEP(self, query, prompt):
+        """Regenerate the user query based on the previous conversation and context."""
+        response = self.client_openai.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {"role": "system", "content": f"{prompt}"},
+                {"role": "user", "content": f"\n\n\n-----USER QUERY:{query}"}
             ],
             temperature=0.1
         )
@@ -279,8 +297,9 @@ class AthenaSearch:
         print("Graph ID Result:", graph_id_result)
         
         # 6. Get top IDs from abstract index
+        REG_ABSLEVQUERY = self.regenerate_query_DEEP(self.user_query, self.ABSLEVQUERY)
         abstract_ids = self.perform_search_id(
-            regenerated_query, 
+            REG_ABSLEVQUERY, 
             self.index_abstract
         )
         print("Abstract IDs:", abstract_ids)
@@ -290,8 +309,9 @@ class AthenaSearch:
         filtered_urls = [url for url in combined_ids if url is not None]
         
         # 8. Filter body index search by combined IDs
+        REG_TXTLEVQUERY = self.regenerate_query_DEEP(self.user_query, self.TXTLEVQUERY)
         final_results = self.perform_search_with_filters(
-            regenerated_query, 
+            REG_TXTLEVQUERY, 
             self.index_body, 
             filtered_urls
         )
