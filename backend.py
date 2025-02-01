@@ -159,7 +159,7 @@ class AthenaSearch:
 
     def generate_entities(self, query, prompt):
         """Use the DeepSeek model to extract possible entities from the user query."""
-        response = self.client_deepseek.chat.completions.create(
+        response = self.client_openai.chat.completions.create(
             model="gpt-4o-mini",
             messages=[
                 {"role": "system", "content": f"{prompt}"},
@@ -199,7 +199,7 @@ class AthenaSearch:
     def perform_response(self, query, results, prompt):
         """Generate a final response (GPT-based) using the retrieved texts and user query."""
         response = self.client_openai.chat.completions.create(
-            model="gpt-4o-mini",
+            model="gpt-4o",
             messages=[
                 {"role": "system", "content": f"{prompt}"},
                 {"role": "user", "content": f"\n\n\n-----QUERY:{query}\n\n------VECTOR RESULTS:{results}."}
