@@ -136,8 +136,8 @@ class AthenaSearch:
 
     def generate_cypher(self, query, prompt, entities):
         """Use the DeepSeek model to generate a Cypher query based on the user query and extracted entities."""
-        response = self.client_deepseek.chat.completions.create(
-            model="deepseek-coder",
+        response = self.client_openai.chat.completions.create(
+            model="gpt-4o-mini",
             messages=[
                 {"role": "system", "content": f"{prompt}"},
                 {"role": "user", "content": f"\n\nUSER QUERY{query}\n\nENTITIES EXTRACTED:{entities}"}
