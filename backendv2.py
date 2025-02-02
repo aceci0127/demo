@@ -247,7 +247,7 @@ class AthenaSearch:
             model="gpt-4o",
             messages=[
                 {"role": "system", "content": f"{prompt}"},
-                {"role": "user", "content": f"\n\n\n-----QUERY:{query}\n\n------VECTOR RESULTS:{results}."}
+                {"role": "user", "content": f"\n\n\n-----USER QUESTION:{query}\n\n------TEXT EXTRACTED:{results}."}
             ],
             temperature=0.1
         )
