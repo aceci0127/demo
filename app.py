@@ -1,4 +1,4 @@
-from backend import AthenaSearch
+from backendv2 import AthenaSearch
 import streamlit as st
 import time
 
