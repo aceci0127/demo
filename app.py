@@ -9,7 +9,7 @@ st.set_page_config(
 
 Home = st.Page("app.py", title="Homepage", icon=":material/home:")
 Pack = st.Page("pages/Packaging.py", title="Packaging Demo")
-Med = st.Page("pages/Med.py", title="Medical Demo")
+Med = st.Page("pages/Medical.py", title="Medical Demo")
 
 st.navigation([Home, Pack, Med])
 
