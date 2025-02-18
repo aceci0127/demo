@@ -1,7 +1,6 @@
 import streamlit as st
 
 # Set up page configuration
-st.sidebar.title("Homepage")
 st.set_page_config(
     page_title="Your Startup - Athena Demo",
     page_icon=":rocket:",
