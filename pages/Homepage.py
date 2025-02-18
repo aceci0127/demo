@@ -130,7 +130,7 @@ with col2:
 with col3:
     st.markdown(
         """
-        <a href="pages/ThermalB.py">
+        <a href="/ThermalB.py">
           <div class="card">
               <h3>Thermal Barrier</h3>
               <ul>
