@@ -10,7 +10,7 @@ index_entity = "papers-entity-embeddings"
 # ----------- Streamlit UI & main logic -----------
 st.image("images/Logo.png", width=100)
 st.title("A T H E N A | Packaging DEMO")
-st.info("Welcome to *ATHENA*, the AI-powered search engine for scientific papers on Packaging. The dataset is composed of only 100 scientific papers.  - ENGLISH ONLY🇬🇧")
+st.info("The dataset is composed of only 100 scientific papers.  - ENGLISH ONLY🇬🇧")
 
 # Initialize the conversation if not present
 if 'conversation' not in st.session_state:
