@@ -2,6 +2,7 @@ from backendv2 import AthenaSearch
 import streamlit as st
 import time
 
+
 index_body = "papers-body-packaging"
 index_abstract = "papers-abstracts"
 index_entity = "papers-entity-embeddings"

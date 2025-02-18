@@ -8,8 +8,8 @@ st.set_page_config(
 )
 
 # Display the startup logo and name
-logo_path = "path/to/your/logo.png"  # Replace with your logo's correct directory
-st.image(logo_path, width=200)
+logo_path = "images/Logo.png"  # Replace with your logo's correct directory
+st.image(logo_path, width=100)
 st.title("Your Startup Name")
 
 # Explanation of the Athena demo version
