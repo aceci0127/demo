@@ -10,13 +10,12 @@ st.set_page_config(
 # Display the startup logo and name
 logo_path = "images/Logo.png"  # Replace with your logo's correct directory
 st.image(logo_path, width=100)
-st.title("ATHENA")
+st.title("ATHENA - A Demo Showcase")
 
 # Explanation of the Athena demo version
 st.markdown("""
-## Welcome to the Athena Demo
 
-Athena is our cutting-edge, AI-powered demo that showcases how technology can be tailored for specific industry challenges. Whether your focus is on Packaging, Med, or Thermal Barrier applications, Athena demonstrates how intelligent solutions can optimize processes, enhance quality, and drive efficiency.
+Athena is our cutting-edge, AI-Search Assitant that showcases how technology can be tailored for specific industry challenges. Whether your focus is on Packaging, Med, or Thermal Barrier applications, Athena demonstrates how intelligent solutions can optimize processes, enhance quality, and drive efficiency.
 """)
 
 # Packaging section
