@@ -15,7 +15,7 @@ st.title("ATHENA - A Demo Showcase")
 # Explanation of the Athena demo version
 st.markdown("""
 
-Athena is our cutting-edge, AI-Search Assitant that showcases how technology can be tailored for specific industry challenges. Whether your focus is on Packaging, Med, or Thermal Barrier applications, Athena demonstrates how intelligent solutions can optimize processes, enhance quality, and drive efficiency.
+Athena is our cutting-edge, AI-Search Assitant that showcases how technology can be tailored for specific industry challenges.  Whether your focus is on Packaging, Med, or Thermal Barrier applications, Athena demonstrates how intelligent solutions can optimize processes, enhance quality, and drive efficiency.
 """)
 
 # Packaging section
