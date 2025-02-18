@@ -11,8 +11,11 @@ Home = st.Page("app.py", title="Homepage", icon=":material/home:")
 Pack = st.Page("pages/Packaging.py", title="Packaging Demo")
 Med = st.Page("pages/Medical.py", title="Medical Demo")
 
-st.navigation([Home, Pack, Med])
+pg = st.navigation([Home, Pack, Med])
 
+pg.run()
+
+################################################################################
 # Display the startup logo and name
 logo_path = "images/Logo.png"  # Replace with your logo's correct directory
 st.image(logo_path, width=100)
