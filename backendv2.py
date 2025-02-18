@@ -176,18 +176,18 @@ class AthenaSearch:
             return None
     
     def sub_queries(self, query):
-    # Split the query into multiple parts if necessary to improve vector search
+        # Split the query into multiple parts if necessary to improve vector search
         prompt = """
             Break down the given query into multiple logically structured sub-queries that progressively refine and explore different aspects of the main question. Ensure the sub-queries cover foundational concepts, key components, and step-by-step approaches where applicable.
-
+            The number of subqueries should depend on the complexity of the main question and the depth of exploration required to provide a comprehensive answer.
+            Don't genereate more than 5 sub-queries.
             For example:
                 •	Input: How to build a RAG System?
                 •	Output:
                         #	What is a RAG System?
                         #	What are the key components of a RAG System?
                         #	What are the steps to build a RAG System?”**
-
-            This version enhances clarity, specifies a structured breakdown, and ensures a logical flow of sub-queries.
+            
         """
         response = self.client_openai.chat.completions.create(
             model="gpt-4o-mini",
@@ -299,39 +299,10 @@ class AthenaSearch:
         SUB_QUERIES = self.sub_queries(regenerated_query)
         FINALS = []
         for i in SUB_QUERIES:
-
-            """   
-            # 3. Extract Entities
-            entities_generated = self.generate_entities(
-                self.user_query, 
-                self.PROMPT_LLMentity_Extractor
-            )
-            print("Entities Extracted:", entities_generated)
-            list_of_entity = [item.strip() for item in entities_generated.strip("[]").split(",")]
-            print("List of Entities:", list_of_entity)
-
-            #3.1 Search for entities in the entity index
-            entities_extracted = ""
-            for i in list_of_entity:
-                entity = self.perform_search_for_entity(i, self.index_entity)
-                entities_extracted = entities_extracted + str(entity)
-            
-            # 4. Generate a Cypher query
-            cypher_query = self.generate_cypher(
-                regenerated_query, 
-                self.PROMPT_CYPHER_QUERY_BUILDER, 
-                entities_extracted
-            )
-            print("Cypher Query Generated:", cypher_query)
-            
-            # 5. Execute the Cypher query and get a single ID result from the graph
-            graph_id_result = self.execute_query(cypher_query)
-            print("Graph ID Result:", graph_id_result)
-            """
+        
             # 6. Get top IDs from abstract index
-            REG_ABSLEVQUERY = self.regenerate_query_DEEP(i, self.ABSLEVQUERY)
             abstract_ids = self.perform_search_id(
-                REG_ABSLEVQUERY, 
+                i, 
                 self.index_abstract
             )
             print("Abstract IDs:", abstract_ids)
@@ -341,9 +312,8 @@ class AthenaSearch:
             filtered_urls = [url for url in combined_ids if url is not None]
             
             # 8. Filter body index search by combined IDs
-            REG_TXTLEVQUERY = self.regenerate_query_DEEP(i, self.TXTLEVQUERY)
             final_results = self.perform_search_with_filters(
-                REG_TXTLEVQUERY, 
+                i, 
                 self.index_body, 
                 filtered_urls
             )
