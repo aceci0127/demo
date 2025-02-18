@@ -96,7 +96,7 @@ col1, col2, col3 = st.columns(3)
 with col1:
     st.markdown(
         """
-        <a href="/Packaging">
+        <a href="pages/Packaging.py">
           <div class="card">
               <h3>Packaging</h3>
               <ul>
@@ -113,7 +113,7 @@ with col1:
 with col2:
     st.markdown(
         """
-        <a href="/Med">
+        <a href="pages/Medical.py">
           <div class="card">
               <h3>Med</h3>
               <ul>
@@ -130,7 +130,7 @@ with col2:
 with col3:
     st.markdown(
         """
-        <a href="/ThermalBarrier">
+        <a href="pages/ThermalB.py">
           <div class="card">
               <h3>Thermal Barrier</h3>
               <ul>
