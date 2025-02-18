@@ -2,7 +2,7 @@ import streamlit as st
 
 # Set up page configuration
 st.set_page_config(
-    page_title="Your Startup - Athena Demo",
+    page_title="ATHENA Demo",
     page_icon=":rocket:",
     layout="wide",
 )
