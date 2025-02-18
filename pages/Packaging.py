@@ -8,7 +8,6 @@ index_abstract = "papers-abstracts"
 index_entity = "papers-entity-embeddings"
 
 # ----------- Streamlit UI & main logic -----------
-st.image("images/Logo.png", width=100)
 st.title("A T H E N A | Packaging")
 st.info("The dataset is composed of only 100 scientific papers.  - ENGLISH ONLY🇬🇧")
 
