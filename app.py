@@ -24,12 +24,6 @@ st.markdown("""
 Athena is our cutting-edge, AI-powered demo that showcases how technology can be tailored for specific industry challenges. Whether your focus is on Packaging, Med, or Thermal Barrier applications, Athena demonstrates how intelligent solutions can optimize processes, enhance quality, and drive efficiency.
 """)
 
-# Sidebar navigation with anchors for each domain section
-st.sidebar.title("Jump to a Domain")
-st.sidebar.markdown("[Packaging](#packaging)")
-st.sidebar.markdown("[Med](#med)")
-st.sidebar.markdown("[Thermal-Barrier](#thermal-barrier)")
-
 # Packaging section
 st.markdown("---")
 st.header("Packaging")
