@@ -7,6 +7,11 @@ st.set_page_config(
     layout="wide",
 )
 
+Home = st.Page("app.py", title="Homepage", icon=":material/add_circle:")
+Pack = st.Page("pages/Packaging.py", title="Packaging Demo", icon=":material/delete:")
+
+st.navigation([Home, Pack])
+
 # Display the startup logo and name
 logo_path = "images/Logo.png"  # Replace with your logo's correct directory
 st.image(logo_path, width=100)
