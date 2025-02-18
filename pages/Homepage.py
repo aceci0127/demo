@@ -41,6 +41,10 @@ st.markdown(
         padding: 1.5rem;
         margin: 1rem;
         box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        transition: transform 0.2s;
+    }
+    .card:hover {
+        transform: scale(1.02);
     }
     .card h3 {
         color: #0056b3;
@@ -56,6 +60,11 @@ st.markdown(
         border: none;
         border-top: 1px solid #e0e0e0;
         margin: 2rem 0;
+    }
+    /* Remove default link styles for cards */
+    a {
+        text-decoration: none;
+        color: inherit;
     }
     </style>
     """,
@@ -81,20 +90,22 @@ st.markdown(
 
 st.markdown("<hr>", unsafe_allow_html=True)
 
-# Display use cases as cards in a three-column layout
+# Display use cases as clickable cards in a three-column layout
 col1, col2, col3 = st.columns(3)
 
 with col1:
     st.markdown(
         """
-        <div class="card">
-            <h3>Packaging</h3>
-            <ul>
-                <li>Quality Control</li>
-                <li>Supply Chain Optimization</li>
-                <li>Waste Reduction</li>
-            </ul>
-        </div>
+        <a href="/Packaging">
+          <div class="card">
+              <h3>Packaging</h3>
+              <ul>
+                  <li>Quality Control</li>
+                  <li>Supply Chain Optimization</li>
+                  <li>Waste Reduction</li>
+              </ul>
+          </div>
+        </a>
         """,
         unsafe_allow_html=True
     )
@@ -102,14 +113,16 @@ with col1:
 with col2:
     st.markdown(
         """
-        <div class="card">
-            <h3>Med</h3>
-            <ul>
-                <li>Medical Device Diagnostics</li>
-                <li>Patient Monitoring</li>
-                <li>Workflow Optimization</li>
-            </ul>
-        </div>
+        <a href="/Med">
+          <div class="card">
+              <h3>Med</h3>
+              <ul>
+                  <li>Medical Device Diagnostics</li>
+                  <li>Patient Monitoring</li>
+                  <li>Workflow Optimization</li>
+              </ul>
+          </div>
+        </a>
         """,
         unsafe_allow_html=True
     )
@@ -117,14 +130,16 @@ with col2:
 with col3:
     st.markdown(
         """
-        <div class="card">
-            <h3>Thermal Barrier</h3>
-            <ul>
-                <li>Material Performance Analysis</li>
-                <li>Failure Prediction</li>
-                <li>Energy Efficiency Improvement</li>
-            </ul>
-        </div>
+        <a href="/ThermalBarrier">
+          <div class="card">
+              <h3>Thermal Barrier</h3>
+              <ul>
+                  <li>Material Performance Analysis</li>
+                  <li>Failure Prediction</li>
+                  <li>Energy Efficiency Improvement</li>
+              </ul>
+          </div>
+        </a>
         """,
         unsafe_allow_html=True
     )
