@@ -1,57 +1,51 @@
-from backendv2 import AthenaSearch
 import streamlit as st
-import time
 
-index_body = "papers-body-packaging"
-index_abstract = "papers-abstracts"
-index_entity = "papers-entity-embeddings"
+# Set up page configuration
+st.set_page_config(
+    page_title="Your Startup - Athena Demo",
+    page_icon=":rocket:",
+    layout="wide",
+)
 
-# ----------- Streamlit UI & main logic -----------
-st.image("images/Logo.png", width=100)
-st.title("A T H E N A | Packaging DEMO")
-st.info("Welcome to *ATHENA*, the AI-powered search engine for scientific papers on Packaging. The dataset is composed of only 100 scientific papers.  - ENGLISH ONLY🇬🇧")
+# Display the startup logo and name
+logo_path = "path/to/your/logo.png"  # Replace with your logo's correct directory
+st.image(logo_path, width=200)
+st.title("Your Startup Name")
 
-# Initialize the conversation if not present
-if 'conversation' not in st.session_state:
-    st.session_state.conversation = []
+# Explanation of the Athena demo version
+st.markdown("""
+## Welcome to the Athena Demo
 
-# Initialize the conversation if not present
-if 'conversation' not in st.session_state:
-    st.session_state.conversation = []
+Athena is our cutting-edge, AI-powered demo that showcases how technology can be tailored for specific industry challenges. Whether your focus is on Packaging, Med, or Thermal Barrier applications, Athena demonstrates how intelligent solutions can optimize processes, enhance quality, and drive efficiency.
+""")
 
-# Display existing conversation
-for msg in st.session_state.conversation:
-    with st.chat_message(msg["role"]):
-        st.markdown(msg["content"])
+# Sidebar for domain selection
+st.sidebar.title("Select a Domain")
+domain = st.sidebar.radio("Choose a demo domain:", 
+                          ["Packaging", "Med", "Thermal Barrier"])
 
-# On button click, run the pipeline
-if prompt := st.chat_input("Ask Athena:"):
-    # 1) Show the user's query as a chat bubble
-    with st.chat_message("user"):
-        st.markdown(prompt)
+# Display domain-specific Athena demos
+if domain == "Packaging":
+    st.header("Athena in Packaging")
+    st.write("""
+    **Use Cases:** Quality control, supply chain optimization, and waste reduction.
+    
+    Athena leverages computer vision and predictive analytics to monitor packaging quality, optimize material usage, and streamline supply chains. By providing real-time insights, manufacturers can reduce errors, cut waste, and save valuable resources.
+    """)
+elif domain == "Med":
+    st.header("Athena in Med")
+    st.write("""
+    **Use Cases:** Medical device diagnostics, patient monitoring, and workflow optimization.
+    
+    In the medical domain, Athena supports the reliability and performance of healthcare devices. It analyzes operational data to enhance diagnostics, improve patient monitoring, and streamline clinical workflows, leading to better outcomes and increased efficiency.
+    """)
+elif domain == "Thermal Barrier":
+    st.header("Athena in Thermal Barrier")
+    st.write("""
+    **Use Cases:** Material performance analysis, failure prediction, and energy efficiency improvement.
+    
+    For thermal barrier applications, Athena applies advanced simulations and data analytics to monitor material degradation and predict failures. This proactive approach helps maintain energy efficiency and prevents costly system downtimes.
+    """)
 
-    # Save user message in session state
-    st.session_state.conversation.append({"role": "user", "content": prompt})
-
-    # 2) Run your pipeline
-    with st.spinner("Thinking..."):
-        start_time = time.time()  # Record the start time
-        
-        # PIPELINE FROM BACKEND
-        athena_instance = AthenaSearch(prompt, index_body, index_abstract, index_entity, st.session_state.conversation)
-        answer, paper_id = athena_instance.run_pipeline()
-  # Assume the pipeline returns answer and paper_id
-
-        end_time = time.time()  # Record the end time
-        response_time = end_time - start_time  # Calculate response time
-
-    # 3) Display the assistant's answer
-    with st.chat_message("ai"):
-        st.markdown(answer)
-        
-
-    # Append assistant response to conversation
-    st.session_state.conversation.append({"role": "ai", "content": answer})
-
-else:
-    st.warning("Please enter a question before submitting.")
+st.markdown("---")
+st.markdown("Explore the various demos to see how Athena can be adapted to revolutionize your industry-specific challenges!")
