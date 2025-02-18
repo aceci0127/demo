@@ -96,7 +96,7 @@ col1, col2, col3 = st.columns(3)
 with col1:
     st.markdown(
         """
-        <a href="pages/Packaging.py">
+        <a href="pages/Packaging">
           <div class="card">
               <h3>Packaging</h3>
               <ul>
