@@ -121,7 +121,7 @@ with col2:
     st.markdown("""
         <a href="/Medical.py">
           <div class="card">
-              <h3>Med</h3>
+              <h3>Medical</h3>
               <ul>
                 <li>Theme 1</li>
                 <li>Theme 2</li>
