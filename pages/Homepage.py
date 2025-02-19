@@ -60,6 +60,10 @@ st.markdown("""
             color: #666;
             margin: 0;
         }
+        /* Ensure list items have no underline */
+        .card ul li {
+            text-decoration: none;
+        }
         hr {
             border: none;
             border-top: 1px solid #e0e0e0;
@@ -92,7 +96,7 @@ with col_title:
 # Brief description
 st.markdown("""
     <p class="description">
-    Athena is our cutting-edge, AI-Search Assistant tailored for specific industry challenges.
+    Athena is our cutting-edge, AI-Search Assistant tailored for specific industry challenges. Choose a demo below to explore its capabilities.
     </p>
     <p class="description">
     Use the navigation bar on the left or click on the cards below to explore the demos.
@@ -110,8 +114,7 @@ with col1:
           <div class="card">
               <h3>Packaging</h3>
               <ul>
-                <li>Packaging Techniques</li>
-                <li>Packaging on Demand</li>
+                  <li>Overview of included papers and features</li>
               </ul>
           </div>
         </a>
@@ -123,8 +126,7 @@ with col2:
           <div class="card">
               <h3>Med</h3>
               <ul>
-                <li>Theme 1</li>
-                <li>Theme 2</li>
+                  <li>Explore our medical demo features</li>
               </ul>
           </div>
         </a>
@@ -136,8 +138,7 @@ with col3:
           <div class="card">
               <h3>Thermal Barrier</h3>
               <ul>
-                <li>Theme 1</li>
-                <li>Theme 2</li>
+                  <li>Discover thermal management insights</li>
               </ul>
           </div>
         </a>
