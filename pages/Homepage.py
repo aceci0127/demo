@@ -60,19 +60,15 @@ st.markdown("""
             color: #666;
             margin: 0;
         }
-        /* Ensure list items have no underline */
-        .card ul li {
-            text-decoration: none;
+        /* Remove underline from all elements inside links */
+        a, a:link, a:visited, a:hover, a:active, a * {
+            text-decoration: none !important;
+            color: inherit;
         }
         hr {
             border: none;
             border-top: 1px solid #e0e0e0;
             margin: 2.5rem 0;
-        }
-        /* Remove default link styling */
-        a {
-            text-decoration: none;
-            color: inherit;
         }
         /* Responsive adjustments for smaller screens */
         @media (max-width: 768px) {
