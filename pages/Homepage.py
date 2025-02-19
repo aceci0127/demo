@@ -102,7 +102,7 @@ with col1:
         <a href="/Packaging">
           <div class="card">
               <h3>Packaging</h3>
-              <ul> Description of which papers are included in this demo </ul>
+                <ul> Description of which papers are included in this demo </ul>
           </div>
         </a>
         """,
