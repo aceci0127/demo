@@ -102,11 +102,6 @@ with col1:
         <a href="/Packaging">
           <div class="card">
               <h3>Packaging</h3>
-              <ul>
-                  <li>Quality Control</li>
-                  <li>Supply Chain Optimization</li>
-                  <li>Waste Reduction</li>
-              </ul>
           </div>
         </a>
         """,
@@ -119,11 +114,6 @@ with col2:
         <a href="/Medical.py">
           <div class="card">
               <h3>Med</h3>
-              <ul>
-                  <li>Medical Device Diagnostics</li>
-                  <li>Patient Monitoring</li>
-                  <li>Workflow Optimization</li>
-              </ul>
           </div>
         </a>
         """,
@@ -136,11 +126,6 @@ with col3:
         <a href="/ThermalB.py">
           <div class="card">
               <h3>Thermal Barrier</h3>
-              <ul>
-                  <li>Material Performance Analysis</li>
-                  <li>Failure Prediction</li>
-                  <li>Energy Efficiency Improvement</li>
-              </ul>
           </div>
         </a>
         """,
