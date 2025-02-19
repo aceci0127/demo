@@ -87,12 +87,12 @@ col_logo, col_title = st.columns([1, 6])
 with col_logo:
     st.image("images/Logo.png", width=100)
 with col_title:
-    st.markdown('<h1 class="header-title">A T H E N A - Demo Showcase</h1>', unsafe_allow_html=True)
+    st.markdown('<h1 class="header-title">A T H E N A: Research Smarter                         Demo Showcase</h1>', unsafe_allow_html=True)
 
 # Brief description
 st.markdown("""
     <p class="description">
-    Athena is our cutting-edge, AI-Search Assistant tailored for specific industry challenges.
+    Athena is our AI-Search Assistant that allows you to interact with thousand of scientic documents.
     </p>
     <p class="description">
     Use the navigation bar on the left or click on the cards below to explore the demos.
