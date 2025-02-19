@@ -8,7 +8,7 @@ index_abstract = "papers-abstracts"
 index_entity = "papers-entity-embeddings"
 
 # ----------- Streamlit UI & main logic -----------
-st.title("Packaging")
+st.title("P A C K A G I N G")
 st.info("The dataset is composed of only 100 scientific papers on Packaging Techniques and Packaging on Demand  - ENGLISH ONLY🇬🇧")
 
 # Initialize the conversation if not present
