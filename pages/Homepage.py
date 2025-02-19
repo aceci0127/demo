@@ -8,68 +8,79 @@ st.set_page_config(
 )
 
 # Inject custom CSS for styling
-st.markdown(
-    """
+st.markdown("""
     <style>
-    /* Global background */
-    body {
-        background-color: #f0f2f6;
-    }
-    /* Container styling */
-    .main .block-container {
-        background-color: #ffffff;
-        padding: 2rem;
-        border-radius: 10px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
-    /* Header styling */
-    .header-title {
-        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-        font-weight: 700;
-        color: #333333;
-        margin-bottom: 0.25rem;
-    }
-    .description {
-        font-size: 1.1rem;
-        color: #555555;
-        line-height: 1.6;
-    }
-    /* Card styling for use case sections */
-    .card {
-        background-color: #ffffff;
-        border-radius: 8px;
-        padding: 1.5rem;
-        margin: 1rem;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-        transition: transform 0.2s;
-    }
-    .card:hover {
-        transform: scale(1.02);
-    }
-    .card h3 {
-        color: #0056b3;
-        border-bottom: 2px solid #e0e0e0;
-        padding-bottom: 0.5rem;
-    }
-    .card ul {
-        list-style-type: disc;
-        padding-left: 1.5rem;
-        color: #555;
-    }
-    hr {
-        border: none;
-        border-top: 1px solid #e0e0e0;
-        margin: 2rem 0;
-    }
-    /* Remove default link styles for cards */
-    a {
-        text-decoration: none;
-        color: inherit;
-    }
+        /* Global styling */
+        body {
+            background-color: #f0f2f6;
+            font-family: 'Roboto', sans-serif;
+        }
+        /* Main container styling */
+        .main .block-container {
+            background-color: #ffffff;
+            padding: 3rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        /* Header styling */
+        .header-title {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            font-weight: 800;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+        .description {
+            font-size: 1.15rem;
+            color: #555;
+            line-height: 1.6;
+        }
+        /* Card styling */
+        .card {
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding: 2rem;
+            margin: 1rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        }
+        .card h3 {
+            color: #0073e6;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 0.5rem;
+        }
+        .card ul {
+            list-style-type: disc;
+            padding-left: 1.5rem;
+            color: #666;
+            margin: 0;
+        }
+        hr {
+            border: none;
+            border-top: 1px solid #e0e0e0;
+            margin: 2.5rem 0;
+        }
+        /* Remove default link styling */
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+        /* Responsive adjustments for smaller screens */
+        @media (max-width: 768px) {
+            .main .block-container {
+                padding: 1.5rem;
+            }
+            .card {
+                margin: 1rem 0;
+            }
+        }
     </style>
-    """,
-    unsafe_allow_html=True
-)
+""", unsafe_allow_html=True)
 
 # Header Section: Logo and Title side by side
 col_logo, col_title = st.columns([1, 6])
@@ -79,17 +90,14 @@ with col_title:
     st.markdown('<h1 class="header-title">ATHENA - A Demo Showcase</h1>', unsafe_allow_html=True)
 
 # Brief description
-st.markdown(
-    """
+st.markdown("""
     <p class="description">
     Athena is our cutting-edge, AI-Search Assistant tailored for specific industry challenges. Choose a demo below to explore its capabilities.
     </p>
     <p class="description">
-    Choose from the navigiation bar on the left or click on the cards below to explore the demos.
+    Use the navigation bar on the left or click on the cards below to explore the demos.
     </p>
-    """,
-    unsafe_allow_html=True
-)
+""", unsafe_allow_html=True)
 
 st.markdown("<hr>", unsafe_allow_html=True)
 
@@ -97,50 +105,46 @@ st.markdown("<hr>", unsafe_allow_html=True)
 col1, col2, col3 = st.columns(3)
 
 with col1:
-    st.markdown(
-        """
+    st.markdown("""
         <a href="/Packaging">
           <div class="card">
               <h3>Packaging</h3>
-                <ul> Description of which papers are included in this demo </ul>
+              <ul>
+                  <li>Overview of included papers and features</li>
+              </ul>
           </div>
         </a>
-        """,
-        unsafe_allow_html=True
-    )
+    """, unsafe_allow_html=True)
 
 with col2:
-    st.markdown(
-        """
+    st.markdown("""
         <a href="/Medical.py">
           <div class="card">
               <h3>Med</h3>
+              <ul>
+                  <li>Explore our medical demo features</li>
+              </ul>
           </div>
         </a>
-        """,
-        unsafe_allow_html=True
-    )
+    """, unsafe_allow_html=True)
 
 with col3:
-    st.markdown(
-        """
+    st.markdown("""
         <a href="/ThermalB.py">
           <div class="card">
               <h3>Thermal Barrier</h3>
+              <ul>
+                  <li>Discover thermal management insights</li>
+              </ul>
           </div>
         </a>
-        """,
-        unsafe_allow_html=True
-    )
+    """, unsafe_allow_html=True)
 
 st.markdown("<hr>", unsafe_allow_html=True)
 
 # Closing statement
-st.markdown(
-    """
+st.markdown("""
     <p class="description">
     Explore the demos to see how Athena can revolutionize your industry-specific challenges!
     </p>
-    """,
-    unsafe_allow_html=True
-)
+""", unsafe_allow_html=True)
