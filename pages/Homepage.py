@@ -84,6 +84,9 @@ st.markdown(
     <p class="description">
     Athena is our cutting-edge, AI-Search Assistant tailored for specific industry challenges. Choose a demo below to explore its capabilities.
     </p>
+    <p class="description">
+    Choose from the navigiation bar on the left or click on the cards below to explore the demos.
+    </p>
     """,
     unsafe_allow_html=True
 )
