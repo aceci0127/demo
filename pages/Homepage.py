@@ -109,10 +109,8 @@ with col1:
         <a href="/Packaging">
           <div class="card">
               <h3>Packaging</h3>
-              <ul>
                 <li>Packaging Techniques</li>
                 <li>Packaging on Demand</li>
-              </ul>
           </div>
         </a>
     """, unsafe_allow_html=True)
@@ -122,10 +120,8 @@ with col2:
         <a href="/Medical.py">
           <div class="card">
               <h3>Med</h3>
-              <ul>
                 <li>Theme 1</li>
-                <li>Theme 2</li>
-              </ul>
+                <li>Theme 2</li>s
           </div>
         </a>
     """, unsafe_allow_html=True)
@@ -135,10 +131,8 @@ with col3:
         <a href="/ThermalB.py">
           <div class="card">
               <h3>Thermal Barrier</h3>
-              <ul>
                 <li>Theme 1</li>
                 <li>Theme 2</li>
-              </ul>
           </div>
         </a>
     """, unsafe_allow_html=True)
