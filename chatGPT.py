@@ -59,4 +59,3 @@ class CHATGPT:
         conversation_history = self.generate_history(self.user_query, self.conversation, self.HISTORY)
         answer = self.perform_response(self.user_query, conversation_history)
         return answer
-
