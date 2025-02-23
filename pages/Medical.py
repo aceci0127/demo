@@ -6,34 +6,33 @@ import time
 index_body = "papers-body-packaging"
 index_abstract = "papers-abstracts"
 
-# ----------- Streamlit UI & main logic -----------
 st.title("C O P P E R")
 st.info("The dataset is composed of only 100 scientific papers on Copper - ENGLISH ONLY🇬🇧")
 
-# Initialize the conversation if not present
-if 'conversation' not in st.session_state:
-    st.session_state.conversation = []
+# Use a unique session state key for this page
+if 'conversation_copper' not in st.session_state:
+    st.session_state.conversation_copper = []
 
-# Display existing conversation
-for msg in st.session_state.conversation:
+# Display existing conversation for the Copper page
+for msg in st.session_state.conversation_copper:
     with st.chat_message(msg["role"]):
         st.markdown(msg["content"])
 
 # On button click, run the pipeline
-if prompt := st.chat_input("Ask Athena:"):
+if prompt := st.chat_input("Ask Athena:", key="copper_chat_input"):
     # 1) Show the user's query as a chat bubble
     with st.chat_message("user"):
         st.markdown(prompt)
 
-    # Save user message in session state
-    st.session_state.conversation.append({"role": "user", "content": prompt})
+    # Save user message in the page-specific session state
+    st.session_state.conversation_copper.append({"role": "user", "content": prompt})
 
     # 2) Run your pipeline
     with st.spinner("I'm thinking..."):
         start_time = time.time()  # Record the start time
         
         # PIPELINE FROM BACKEND (Athena)
-        athena_instance = AthenaSearch(prompt, index_body, index_abstract, st.session_state.conversation)
+        athena_instance = AthenaSearch(prompt, index_body, index_abstract, st.session_state.conversation_copper)
         athena_answer, paper_id = athena_instance.run_pipeline()
 
         # PIPELINE FROM GPT (ChatGPT)
@@ -52,7 +51,10 @@ if prompt := st.chat_input("Ask Athena:"):
         st.subheader("Athena Answer")
         st.markdown(athena_answer)
 
-    # Optionally, append the assistant responses to the conversation
-    st.session_state.conversation.append({"role": "ai", "content": f"**ChatGPT:** {chatGPT_answer}\n\n**Athena:** {athena_answer}"})
+    # Append the assistant responses to the page-specific conversation
+    st.session_state.conversation_copper.append({
+        "role": "ai",
+        "content": f"**ChatGPT:** {chatGPT_answer}\n\n**Athena:** {athena_answer}"
+    })
 else:
     st.warning("Please enter a question before submitting.")
