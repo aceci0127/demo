@@ -30,7 +30,7 @@ if prompt := st.chat_input("Ask Athena:"):
     st.session_state.conversation.append({"role": "user", "content": prompt})
 
     # 2) Run your pipeline
-    with st.spinner("Thinking..."):
+    with st.spinner("I'm thinking..."):
         start_time = time.time()  # Record the start time
         
         # PIPELINE FROM BACKEND (Athena)
