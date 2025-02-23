@@ -1,2 +1,2 @@
-## Athena Demo for Packaging
+## Athena Demo 
 ### The database is built on 100 scientific papers with open-access.
