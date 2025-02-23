@@ -3,7 +3,7 @@ import openai
 from dotenv import load_dotenv
 import streamlit as st
 
-class CHATGPT:
+class LLM:
     def __init__(self, user_query, conversation=""):
         """
         Class constructor that sets up environment variables,
