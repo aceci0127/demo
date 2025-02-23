@@ -1,7 +1,7 @@
 from backendv2 import AthenaSearch
+from chatGPT import ChatGPT
 import streamlit as st
 import time
-
 
 index_body = "papers-body-packaging"
 index_abstract = "papers-abstracts"
@@ -10,10 +10,6 @@ index_entity = "papers-entity-embeddings"
 # ----------- Streamlit UI & main logic -----------
 st.title("P A C K A G I N G")
 st.info("The dataset is composed of only 100 scientific papers on Packaging Techniques and Packaging on Demand  - ENGLISH ONLY🇬🇧")
-
-# Initialize the conversation if not present
-if 'conversation' not in st.session_state:
-    st.session_state.conversation = []
 
 # Initialize the conversation if not present
 if 'conversation' not in st.session_state:
@@ -37,21 +33,26 @@ if prompt := st.chat_input("Ask Athena:"):
     with st.spinner("Thinking..."):
         start_time = time.time()  # Record the start time
         
-        # PIPELINE FROM BACKEND
+        # PIPELINE FROM BACKEND (Athena)
         athena_instance = AthenaSearch(prompt, index_body, index_abstract, index_entity, st.session_state.conversation)
-        answer, paper_id = athena_instance.run_pipeline()
-  # Assume the pipeline returns answer and paper_id
+        athena_answer, paper_id = athena_instance.run_pipeline()
+
+        # PIPELINE FROM GPT (ChatGPT)
+        chatGPT_answer = ChatGPT(prompt)
 
         end_time = time.time()  # Record the end time
         response_time = end_time - start_time  # Calculate response time
 
-    # 3) Display the assistant's answer
-    with st.chat_message("ai"):
-        st.markdown(answer)
-        
+    # 3) Display both answers side by side in two columns
+    cols = st.columns(2)
+    with cols[0]:
+        st.subheader("ChatGPT Answer")
+        st.markdown(chatGPT_answer)
+    with cols[1]:
+        st.subheader("Athena Answer")
+        st.markdown(athena_answer)
 
-    # Append assistant response to conversation
-    st.session_state.conversation.append({"role": "ai", "content": answer})
-
+    # Optionally, append the assistant responses to the conversation
+    st.session_state.conversation.append({"role": "ai", "content": f"**ChatGPT:** {chatGPT_answer}\n\n**Athena:** {athena_answer}"})
 else:
     st.warning("Please enter a question before submitting.")
