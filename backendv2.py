@@ -239,6 +239,30 @@ class AthenaSearch:
         )
         metadata_id = [match['metadata']['id'] for match in query_results['matches']]
         return metadata_id
+    
+    def translate_to_english(self, query):
+        """Generate a final response (GPT-based) using the retrieved texts and user query."""
+        response = self.client_openai.chat.completions.create(
+            model="gpt-4o",
+            messages=[
+                {"role": "system", "content": f"Traduci il testo in inglese. Non modificare il significato del testo e i suoi dettagli."},
+                {"role": "user", "content": f"\n\n\n-----QUERY:{query}."}
+            ],
+            temperature=0.1
+        )
+        return response.choices[0].message.content
+    
+    def translate_to_italian(self, query):
+        """Generate a final response (GPT-based) using the retrieved texts and user query."""
+        response = self.client_openai.chat.completions.create(
+            model="gpt-4o",
+            messages=[
+                {"role": "system", "content": f"Translate to italian. Do not change the meaning of the text and its details."},
+                {"role": "user", "content": f"\n\n\n-----TEXT:{query}"}
+            ],
+            temperature=0.1
+        )
+        return response.choices[0].message.content
 
     def perform_response(self, query, results, prompt):
         """Generate a final response (GPT-based) using the retrieved texts and user query."""
@@ -288,6 +312,9 @@ class AthenaSearch:
         """
         print("User Query:", self.user_query)
 
+        # 0. Translate the user query to English
+        self.user_query = self.translate_to_english(self.user_query)
+
         # 1. Generate conversation history
         conversation_history = self.generate_history(self.user_query, self.conversation, self.HISTORY)
 
@@ -336,5 +363,8 @@ class AthenaSearch:
             FINALS_UNIQUE, 
             self.PROMPT_answer
         )
+
+        #11. Translate the final response to Italian
+        athena_response = self.translate_to_italian(athena_response)
         
         return athena_response, combined_ids

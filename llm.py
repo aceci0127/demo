@@ -30,6 +30,30 @@ class LLM:
             api_key=self.DEEPSEEK_API_KEY, 
             base_url="https://api.deepseek.com"
         )   
+    
+    def translate_to_english(self, query):
+        """Generate a final response (GPT-based) using the retrieved texts and user query."""
+        response = self.client_openai.chat.completions.create(
+            model="gpt-4o",
+            messages=[
+                {"role": "system", "content": f"Traduci il testo in inglese. Non modificare il significato del testo e i suoi dettagli."},
+                {"role": "user", "content": f"\n\n\n-----QUERY:{query}."}
+            ],
+            temperature=0.1
+        )
+        return response.choices[0].message.content
+    
+    def translate_to_italian(self, query):
+        """Generate a final response (GPT-based) using the retrieved texts and user query."""
+        response = self.client_openai.chat.completions.create(
+            model="gpt-4o",
+            messages=[
+                {"role": "system", "content": f"Translate to italian. Do not change the meaning of the text and its details."},
+                {"role": "user", "content": f"\n\n\n-----TEXT:{query}"}
+            ],
+            temperature=0.1
+        )
+        return response.choices[0].message.content
 
     def perform_response(self, query, history):
         """Generate a final response (GPT-based) using the retrieved texts and user query."""
@@ -57,6 +81,8 @@ class LLM:
         return response.choices[0].message.content
     
     def run_pipeline(self):
+        self.user_query = self.translate_to_english(self.user_query)
         conversation_history = self.generate_history(self.user_query, self.conversation, self.HISTORY)
         answer = self.perform_response(self.user_query, conversation_history)
+        answer = self.translate_to_italian(answer)
         return answer

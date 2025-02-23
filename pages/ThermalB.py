@@ -8,7 +8,7 @@ index_abstract = "thermalbarrier-demo-abstracts"
 
 # ----------- Streamlit UI & main logic -----------
 st.title("T H E R M A L  B A R R I E R")
-st.info("The dataset is composed of only 100 scientific papers on Thermal Barrier  - ENGLISH ONLY🇬🇧")
+st.info("The dataset is composed of only 100 scientific papers on Thermal Barrier")
 
 # Initialize the conversation if not present
 if 'conversation' not in st.session_state:
