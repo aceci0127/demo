@@ -142,7 +142,7 @@ with col2:
     st.markdown("""
         <a href="/Copper.py">
           <div class="card">
-              <h3>Replace...</h3>
+              <h3>Copper</h3>
               <ul>
                 <li>Tema 1</li>
                 <li>Tema 2</li>
