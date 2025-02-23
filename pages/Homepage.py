@@ -7,16 +7,13 @@ st.set_page_config(
     layout="wide",
 )
 
-# Includi il font personalizzato (Glacial Indifference) da un CDN
-st.markdown('<link href="https://fonts.cdnfonts.com/css/glacial-indifference" rel="stylesheet">', unsafe_allow_html=True)
-
 # Applica CSS personalizzato per lo stile
 st.markdown("""
     <style>
         /* Stile globale con un leggero gradiente di sfondo */
         body {
             background: linear-gradient(135deg, #f0f2f6 0%, #ffffff 100%);
-            font-family: 'Glacial Indifference', sans-serif;
+            font-family: sans-serif;
             margin: 0;
             padding: 0;
             color: #333;
