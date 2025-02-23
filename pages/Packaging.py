@@ -38,7 +38,8 @@ if prompt := st.chat_input("Ask Athena:"):
         athena_answer, paper_id = athena_instance.run_pipeline()
 
         # PIPELINE FROM GPT (ChatGPT)
-        chatGPT_answer = LLM(prompt)
+        chatGPT = LLM(prompt)
+        chatGPT_answer = chatGPT.run_pipeline()
 
         end_time = time.time()  # Record the end time
         response_time = end_time - start_time  # Calculate response time
