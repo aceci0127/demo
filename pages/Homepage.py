@@ -129,10 +129,10 @@ with col1:
     st.markdown("""
         <a href="/Packaging">
           <div class="card">
-              <h3>Imballaggio</h3>
+              <h3>Packaging</h3>
               <ul>
                 <li>Tecniche di Imballaggio</li>
-                <li>Imballaggio su Richiesta</li>
+                <li>Packaging on Demand</li>
               </ul>
           </div>
         </a>
@@ -142,7 +142,7 @@ with col2:
     st.markdown("""
         <a href="/Medical.py">
           <div class="card">
-              <h3>Medico</h3>
+              <h3>Replace...</h3>
               <ul>
                 <li>Tema 1</li>
                 <li>Tema 2</li>
