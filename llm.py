@@ -41,7 +41,8 @@ class LLM:
             ],
             temperature=0.1
         )
-        return response.choices[0].message.content
+        answer = response.choices[0].message.content
+        return answer
     
     def generate_history(self, query, conversation, prompt):
         """Regenerate the user query based on the previous conversation and context."""
