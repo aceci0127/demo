@@ -140,7 +140,7 @@ with col1:
 
 with col2:
     st.markdown("""
-        <a href="/Medical.py">
+        <a href="/Copper.py">
           <div class="card">
               <h3>Replace...</h3>
               <ul>

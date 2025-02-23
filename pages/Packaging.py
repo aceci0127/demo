@@ -5,7 +5,6 @@ import time
 
 index_body = "papers-body-packaging"
 index_abstract = "papers-abstracts"
-index_entity = "papers-entity-embeddings"
 
 # ----------- Streamlit UI & main logic -----------
 st.title("P A C K A G I N G")
@@ -34,7 +33,7 @@ if prompt := st.chat_input("Ask Athena:"):
         start_time = time.time()  # Record the start time
         
         # PIPELINE FROM BACKEND (Athena)
-        athena_instance = AthenaSearch(prompt, index_body, index_abstract, index_entity, st.session_state.conversation)
+        athena_instance = AthenaSearch(prompt, index_body, index_abstract, st.session_state.conversation)
         athena_answer, paper_id = athena_instance.run_pipeline()
 
         # PIPELINE FROM GPT (ChatGPT)

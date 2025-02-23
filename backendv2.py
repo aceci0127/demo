@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 import streamlit as st
 
 class AthenaSearch:
-    def __init__(self, user_query, index_body, index_abstract, index_entity, conversation=""):
+    def __init__(self, user_query, index_body, index_abstract, conversation=""):
         """
         Class constructor that sets up environment variables,
         loads prompt files, initializes clients (OpenAI, DeepSeek, Neo4j, etc.),
@@ -38,7 +38,6 @@ class AthenaSearch:
         # Pinecone indexes passed in by the user
         self.index_body = self.pc.Index(index_body)
         self.index_abstract = self.pc.Index(index_abstract)
-        self.index_entity = self.pc.Index(index_entity)
         
         # Neo4j Setup
         AURA_DB_URI = "neo4j+s://2886f391.databases.neo4j.io"
