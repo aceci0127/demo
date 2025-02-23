@@ -108,7 +108,7 @@ col_logo, col_title = st.columns([1, 6])
 with col_logo:
     st.image("images/Logo.png", width=100)
 with col_title:
-    st.markdown('<h1 class="header-title">A T H E N A - Vetrina Demo</h1> <h2>Esplora l\'avanguardia della conoscenza attraverso le conversazioni</h2>', unsafe_allow_html=True)
+    st.markdown('<h1 class="header-title">A T H E N A - Demo</h1> <h2>Esplora i confimi della conoscenza attraverso conversazioni</h2>', unsafe_allow_html=True)
 
 # Breve descrizione
 st.markdown("""
