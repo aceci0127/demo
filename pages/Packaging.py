@@ -1,5 +1,5 @@
 from backendv2 import AthenaSearch
-from chatGPT import ChatGPT
+from chatGPT import CHATGPT
 import streamlit as st
 import time
 
