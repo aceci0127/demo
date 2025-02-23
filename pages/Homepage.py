@@ -152,7 +152,7 @@ with col3:
     st.markdown("""
         <a href="/ThermalB.py">
           <div class="card">
-              <h3>Barriera Termica</h3>
+              <h3>Barriere Termiche</h3>
               <ul>
                 <li>Tema 1</li>
                 <li>Tema 2</li>
