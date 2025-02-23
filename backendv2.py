@@ -284,15 +284,11 @@ class AthenaSearch:
         High-level method that runs the entire pipeline:
         1. Generate conversation history
         2. Regenerate user query
-        3. Extract entities
-            3.1 Search for entities in the entity index
-        4. Generate a Cypher query
-        5. Execute query in Neo4j to retrieve IDs
-        6. Perform abstract-level Vector IDs search
-        7. Combine IDs
-        8. Filter Body index search by those IDs
-        9. Rerank results
-        10. Generate final response
+        3. Perform abstract-level Vector IDs search
+        4. Combine IDs
+        5. Filter Body index search by those IDs
+        6. Rerank results
+        7. Generate final response
         """
         print("User Query:", self.user_query)
 
