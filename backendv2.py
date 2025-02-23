@@ -75,7 +75,7 @@ class AthenaSearch:
             model=rerank_name,
             query=query,
             documents=docs,
-            top_n=10,
+            top_n=15,
             return_documents=True
         )
         ids = [doc["document"]["id"] for doc in rerank_docs.data]
@@ -98,22 +98,6 @@ class AthenaSearch:
             return vector
         except Exception as e:
             return None
-    
-    def perform_search_for_entity(self, input_text, index):
-        vec = self.perform_embedding_for_entity(input_text)  # Get the embedding vector for the input text
-        query_results = index.query(
-            vector=vec,  # Use the embedding vector for the search
-            top_k=10,  # Return the top 2 matches
-            include_values=False,
-            include_metadata=True)
-        # Extract metadata text and scores from the query results
-        name = [match['metadata']['Entity Name'] for match in query_results['matches']]
-        type = [match['metadata']['Entity Type'] for match in query_results['matches']]
-        doc = [
-            {"Entity Name: ": i, "Entity Type: ": txt}
-            for i, txt in zip(name, type)
-        ]
-        return doc
 
     def generate_history(self, query, conversation, prompt):
         """Regenerate the user query based on the previous conversation and context."""
@@ -179,7 +163,7 @@ class AthenaSearch:
         prompt = """
             Break down the given query into multiple logically structured sub-queries that progressively refine and explore different aspects of the main question. Ensure the sub-queries cover foundational concepts, key components, and step-by-step approaches where applicable.
             The number of subqueries should depend on the complexity of the main question and the depth of exploration required to provide a comprehensive answer.
-            Don't genereate more than 5 sub-queries.
+            Don't genereate more than 6 sub-queries.
             For example:
                 •	Input: How to build a RAG System?
                 •	Output:
@@ -221,7 +205,7 @@ class AthenaSearch:
         vec = self.perform_embedding(input_text)
         query_results = index.query(
             vector=vec,
-            top_k=10,
+            top_k=15,
             include_values=False,
             include_metadata=True
         )
@@ -233,7 +217,7 @@ class AthenaSearch:
         vec = self.perform_embedding(input_text)
         query_results = index.query(
             vector=vec,
-            top_k=10,
+            top_k=20,
             include_values=False,
             include_metadata=True
         )
@@ -243,7 +227,7 @@ class AthenaSearch:
     def translate_to_english(self, query):
         """Generate a final response (GPT-based) using the retrieved texts and user query."""
         response = self.client_openai.chat.completions.create(
-            model="gpt-4o",
+            model="gpt-4o-mini",
             messages=[
                 {"role": "system", "content": f"Traduci il testo in inglese. Non modificare il significato del testo e i suoi dettagli."},
                 {"role": "user", "content": f"\n\n\n-----QUERY:{query}."}
@@ -255,7 +239,7 @@ class AthenaSearch:
     def translate_to_italian(self, query):
         """Generate a final response (GPT-based) using the retrieved texts and user query."""
         response = self.client_openai.chat.completions.create(
-            model="gpt-4o",
+            model="gpt-4o-mini",
             messages=[
                 {"role": "system", "content": f"Translate to italian. Do not change the meaning of the text and its details."},
                 {"role": "user", "content": f"\n\n\n-----TEXT:{query}"}
