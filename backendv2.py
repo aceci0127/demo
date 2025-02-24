@@ -308,7 +308,7 @@ class AthenaSearch:
         print("User Query:", self.user_query)
 
         # 0. Translate the user query to English
-        self.user_query = self.translate_to_english(self.user_query)
+        #self.user_query = self.translate_to_english(self.user_query)
 
         # 1. Generate conversation history
         conversation_history = self.generate_history(self.user_query, self.conversation, self.HISTORY)
@@ -361,6 +361,6 @@ class AthenaSearch:
         )
 
         #11. Translate the final response to Italian
-        athena_response = self.translate_to_italian(athena_response)
+        #athena_response = self.translate_to_italian(athena_response)
         
         return athena_response, combined_ids
