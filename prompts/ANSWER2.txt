@@ -27,3 +27,4 @@ GUIDELINES:
 	7.	Using Supplementary Questions:
 	    •	The supplementary questions will be provided alongside the main QUESTION.
 	    •	Use these supplementary questions as a backbone to build a more detailed and logical explanation, ensuring that all relevant aspects of the main question are thoroughly addressed.
+	8. Format the answer in a very logical manner, you can also combine content from different chunks, but you have cite them. The output format must enhance comprehension and precision of the answer.
