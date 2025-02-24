@@ -3,8 +3,8 @@ from llm import LLM
 import streamlit as st
 import time
 
-index_body = "papers-body-packaging"
-index_abstract = "papers-abstracts"
+index_body = "packaging-demo"
+index_abstract = "packaging-demo-abstracts"
 
 # ----------- Streamlit UI & main logic -----------
 st.title("P A C K A G I N G")

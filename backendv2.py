@@ -57,6 +57,9 @@ class AthenaSearch:
         with open("prompts/ANSWER.txt", "r") as file:
             self.PROMPT_answer = file.read()
         
+        with open("prompts/ANSWER2.txt", "r") as file:
+            self.PROMPT_answer_2 = file.read()
+        
         with open("prompts/GENERATE_QUERY.txt", "r") as file:
             self.REGENERATE_QUERY = file.read()
         
@@ -353,7 +356,7 @@ class AthenaSearch:
         athena_response = self.perform_response_with_questions(
             regenerated_query, 
             FINALS_UNIQUE, 
-            self.PROMPT_answer,
+            self.PROMPT_answer_2,
             SUB_QUERIES
         )
 
