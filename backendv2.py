@@ -166,7 +166,7 @@ class AthenaSearch:
         prompt = """
             Break down the given query into multiple logically structured sub-queries that progressively refine and explore different aspects of the main question. Ensure the sub-queries cover foundational concepts, key components, and step-by-step approaches where applicable.
             The number of subqueries should depend on the complexity of the main question and the depth of exploration required to provide a comprehensive answer.
-            Don't genereate more than 6 sub-queries.
+            Don't genereate more than 4 sub-queries.
             For example:
                 •	Input: How to build a RAG System?
                 •	Output:
