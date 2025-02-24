@@ -320,22 +320,23 @@ class AthenaSearch:
         regenerated_query = self.regenerate_query(self.user_query, conversation_history, self.REGENERATE_QUERY)
         print("Regenerated Query:", regenerated_query)
 
+        # 3. Generate sub-queries
         SUB_QUERIES = self.sub_queries(regenerated_query, prompt=self.SUBQUERIES)
         FINALS = []
         for i in SUB_QUERIES:
         
-            # 6. Get top IDs from abstract index
+            # 4. Perform abstract-level Vector IDs search
             abstract_ids = self.perform_search_id(
                 i, 
                 self.index_abstract
             )
             print("Abstract IDs:", abstract_ids)
             
-            # 7. Combine the two sets of IDs (remove duplicates)
+            # 5. Combine the two sets of IDs (remove duplicates)
             combined_ids = list(set(abstract_ids))
             filtered_urls = [url for url in combined_ids if url is not None]
             
-            # 8. Filter body index search by combined IDs
+            # 6. Filter body index search by combined IDs
             final_results = self.perform_search_with_filters(
                 i, 
                 self.index_body, 
@@ -343,7 +344,7 @@ class AthenaSearch:
             )
             print("Final Results:", final_results)
 
-            # 9. Rerank results
+            # 7. Rerank results
             reranked_results = self.rerank_results(i, final_results)
             for f in reranked_results:
                 FINALS.append(f)
@@ -355,7 +356,7 @@ class AthenaSearch:
                 FINALS_UNIQUE[entry['text']] = entry
         FINALS_UNIQUE = list(FINALS_UNIQUE.values())
             
-        # 10. Generate final response
+        # 8. Generate final response
         athena_response = self.perform_response_with_questions(
             regenerated_query, 
             FINALS_UNIQUE, 
