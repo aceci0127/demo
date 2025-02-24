@@ -8,7 +8,7 @@ index_abstract = "papers-abstracts"
 
 # ----------- Streamlit UI & main logic -----------
 st.title("P A C K A G I N G")
-st.info("Il Database è composto da 1000 articoli scientifici relativi alle techniche di Packaging e Packaging on Demand.")
+st.info("Il Database è composto da 100 articoli scientifici relativi alle techniche di Packaging e Packaging on Demand.")
 
 # Use a unique session state key for this page
 if 'conversation_packaging' not in st.session_state:

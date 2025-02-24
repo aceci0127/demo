@@ -260,6 +260,18 @@ class AthenaSearch:
         )
         return response.choices[0].message.content
 
+    def perform_response_with_questions(self, query, results, prompt, questions):
+        """Generate a final response (GPT-based) using the retrieved texts and user query."""
+        response = self.client_openai.chat.completions.create(
+            model="gpt-4o",
+            messages=[
+                {"role": "system", "content": f"{prompt}"},
+                {"role": "user", "content": f"\n\n\n-----QUERY:{query}\n\n------VECTOR RESULTS:{results}.\n\nOTHER QUESTIONS:{questions}.\n\nANSWER:"},
+            ],
+            temperature=0.1
+        )
+        return response.choices[0].message.content
+
     def execute_query(self, query):
         """Executes a Cypher query in Neo4j and returns the first paper_id result found."""
         with self.driver.session() as session:
@@ -338,10 +350,11 @@ class AthenaSearch:
         FINALS_UNIQUE = list(FINALS_UNIQUE.values())
             
         # 10. Generate final response
-        athena_response = self.perform_response(
+        athena_response = self.perform_response_with_questions(
             regenerated_query, 
             FINALS_UNIQUE, 
-            self.PROMPT_answer
+            self.PROMPT_answer,
+            SUB_QUERIES
         )
 
         #11. Translate the final response to Italian
