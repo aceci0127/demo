@@ -71,6 +71,9 @@ class AthenaSearch:
         
         with open("prompts/TEXTLEVELQUERY.txt", "r") as file:
             self.TXTLEVQUERY = file.read()
+        
+        with open("prompts/SUBQUERIES.txt", "r") as file:
+            self.SUBQUERIES = file.read()
 
     def rerank_results(self, query, docs):
         rerank_name = "cohere-rerank-3.5"
@@ -161,9 +164,9 @@ class AthenaSearch:
         except Exception:
             return None
     
-    def sub_queries(self, query):
+    def sub_queries(self, query, prompt):
         # Split the query into multiple parts if necessary to improve vector search
-        prompt = """
+        noprompt = """
             Break down the given query into multiple logically structured sub-queries that progressively refine and explore different aspects of the main question. Ensure the sub-queries cover foundational concepts, key components, and step-by-step approaches where applicable.
             The number of subqueries should depend on the complexity of the main question and the depth of exploration required to provide a comprehensive answer.
             Don't genereate more than 4 sub-queries.
@@ -317,7 +320,7 @@ class AthenaSearch:
         regenerated_query = self.regenerate_query(self.user_query, conversation_history, self.REGENERATE_QUERY)
         print("Regenerated Query:", regenerated_query)
 
-        SUB_QUERIES = self.sub_queries(regenerated_query)
+        SUB_QUERIES = self.sub_queries(regenerated_query, prompt=self.SUBQUERIES)
         FINALS = []
         for i in SUB_QUERIES:
         

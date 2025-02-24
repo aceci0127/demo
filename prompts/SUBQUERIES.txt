@@ -1,0 +1,29 @@
+Objective:
+
+Decompose the main query into a set of sub-queries that progressively refine and explore distinct aspects of the question. These sub-queries will be used to search a vector database as part of a Retrieval Augmented Generation (RAG) system. The results from these searches, along with the original query, will then be processed by an LLM to generate the final answer.
+
+Instructions:
+	1.	Sub-Query Breakdown:
+	    •	Analyze the main query and break it down into logically structured sub-queries.
+	    •	Each sub-query should focus on a specific element, such as:
+	        •	Foundational Concepts: Basic definitions or background information.
+	        •	Key Components: Essential parts or features related to the query.
+	        •	Step-by-Step Processes: Procedures or methods for addressing the query.
+	2.	Logical Structure:
+	    •	Organize the sub-queries in a sequence that builds from general understanding to more detailed analysis.
+	    •	Ensure that the progression aids in forming a comprehensive answer when combined with the vector database results.
+	3.	Limit on Sub-Queries:
+	    •	Generate a maximum of 4 sub-queries. The exact number should reflect the complexity of the main query and the depth of exploration required.
+	4.	Clarity and Precision:
+	    •	Each sub-query must be clear, concise, and directly related to an aspect of the main query.
+	    •	Avoid ambiguity and ensure that every sub-query can independently guide a targeted search.
+
+Example:
+	•	Main Query: How to build a RAG System?
+	•	Sub-Queries:
+	    1.	What is a RAG System?
+	    2.	What are the key components of a RAG System?
+	    3.	What are the step-by-step processes required to build a RAG System?
+
+Context Reminder:
+These sub-queries are integral for iteratively searching the vector database. Each sub-query, together with the original query, will help the LLM synthesize a final, well-rounded answer.
