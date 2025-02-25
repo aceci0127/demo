@@ -6,9 +6,10 @@ from neo4j import GraphDatabase
 from pinecone import Pinecone
 from dotenv import load_dotenv
 import streamlit as st
+import concurrent.futures
 
 class AthenaSearch:
-    def __init__(self, user_query, index_body, index_abstract, index_entity, conversation=""):
+    def __init__(self, user_query, index_body, index_abstract, conversation=""):
         """
         Class constructor that sets up environment variables,
         loads prompt files, initializes clients (OpenAI, DeepSeek, Neo4j, etc.),
@@ -38,7 +39,6 @@ class AthenaSearch:
         # Pinecone indexes passed in by the user
         self.index_body = self.pc.Index(index_body)
         self.index_abstract = self.pc.Index(index_abstract)
-        self.index_entity = self.pc.Index(index_entity)
         
         # Neo4j Setup
         AURA_DB_URI = "neo4j+s://2886f391.databases.neo4j.io"
@@ -58,6 +58,9 @@ class AthenaSearch:
         with open("prompts/ANSWER.txt", "r") as file:
             self.PROMPT_answer = file.read()
         
+        with open("prompts/ANSWER2.txt", "r") as file:
+            self.PROMPT_answer_2 = file.read()
+        
         with open("prompts/GENERATE_QUERY.txt", "r") as file:
             self.REGENERATE_QUERY = file.read()
         
@@ -69,6 +72,9 @@ class AthenaSearch:
         
         with open("prompts/TEXTLEVELQUERY.txt", "r") as file:
             self.TXTLEVQUERY = file.read()
+        
+        with open("prompts/SUBQUERIES.txt", "r") as file:
+            self.SUBQUERIES = file.read()
 
     def rerank_results(self, query, docs):
         rerank_name = "cohere-rerank-3.5"
@@ -76,7 +82,7 @@ class AthenaSearch:
             model=rerank_name,
             query=query,
             documents=docs,
-            top_n=10,
+            top_n=15,
             return_documents=True
         )
         ids = [doc["document"]["id"] for doc in rerank_docs.data]
@@ -99,22 +105,6 @@ class AthenaSearch:
             return vector
         except Exception as e:
             return None
-    
-    def perform_search_for_entity(self, input_text, index):
-        vec = self.perform_embedding_for_entity(input_text)  # Get the embedding vector for the input text
-        query_results = index.query(
-            vector=vec,  # Use the embedding vector for the search
-            top_k=10,  # Return the top 2 matches
-            include_values=False,
-            include_metadata=True)
-        # Extract metadata text and scores from the query results
-        name = [match['metadata']['Entity Name'] for match in query_results['matches']]
-        type = [match['metadata']['Entity Type'] for match in query_results['matches']]
-        doc = [
-            {"Entity Name: ": i, "Entity Type: ": txt}
-            for i, txt in zip(name, type)
-        ]
-        return doc
 
     def generate_history(self, query, conversation, prompt):
         """Regenerate the user query based on the previous conversation and context."""
@@ -174,6 +164,33 @@ class AthenaSearch:
             return vector
         except Exception:
             return None
+    
+    def sub_queries(self, query, prompt):
+        # Split the query into multiple parts if necessary to improve vector search
+        noprompt = """
+            Break down the given query into multiple logically structured sub-queries that progressively refine and explore different aspects of the main question. Ensure the sub-queries cover foundational concepts, key components, and step-by-step approaches where applicable.
+            The number of subqueries should depend on the complexity of the main question and the depth of exploration required to provide a comprehensive answer.
+            Don't genereate more than 4 sub-queries.
+            For example:
+                •	Input: How to build a RAG System?
+                •	Output:
+                        #	What is a RAG System?
+                        #	What are the key components of a RAG System?
+                        #	What are the steps to build a RAG System?”**
+            
+        """
+        response = self.client_openai.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {"role": "system", "content": f"{prompt}"},
+                {"role": "user", "content": f"Domanda:{query}."}
+            ],
+            temperature=0.1
+        )
+        answer = response.choices[0].message.content
+        # Split the answer into individual sub-queries by parsing the response
+        sub_queries_list = [line.split('# ', 1)[-1] for line in answer.splitlines() if line.strip()]
+        return sub_queries_list
 
     def generate_entities(self, query, prompt):
         """Use the DeepSeek model to extract possible entities from the user query."""
@@ -195,7 +212,7 @@ class AthenaSearch:
         vec = self.perform_embedding(input_text)
         query_results = index.query(
             vector=vec,
-            top_k=10,
+            top_k=15,
             include_values=False,
             include_metadata=True
         )
@@ -207,12 +224,36 @@ class AthenaSearch:
         vec = self.perform_embedding(input_text)
         query_results = index.query(
             vector=vec,
-            top_k=10,
+            top_k=20,
             include_values=False,
             include_metadata=True
         )
         metadata_id = [match['metadata']['id'] for match in query_results['matches']]
         return metadata_id
+    
+    def translate_to_english(self, query):
+        """Generate a final response (GPT-based) using the retrieved texts and user query."""
+        response = self.client_openai.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {"role": "system", "content": f"Traduci il testo in inglese. Non modificare il significato del testo e i suoi dettagli."},
+                {"role": "user", "content": f"\n\n\n-----QUERY:{query}."}
+            ],
+            temperature=0.1
+        )
+        return response.choices[0].message.content
+    
+    def translate_to_italian(self, query):
+        """Generate a final response (GPT-based) using the retrieved texts and user query."""
+        response = self.client_openai.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {"role": "system", "content": f"Translate to italian. Do not change the meaning of the text and its details. Just translate the text, do not add any other text."},
+                {"role": "user", "content": f"\n\n\n-----TEXT:{query}"}
+            ],
+            temperature=0.1
+        )
+        return response.choices[0].message.content
 
     def perform_response(self, query, results, prompt):
         """Generate a final response (GPT-based) using the retrieved texts and user query."""
@@ -220,7 +261,19 @@ class AthenaSearch:
             model="gpt-4o",
             messages=[
                 {"role": "system", "content": f"{prompt}"},
-                {"role": "user", "content": f"\n\n\n-----QUERY:{query}\n\n------VECTOR RESULTS:{results}."}
+                {"role": "user", "content": f"\n\n\n-----USER QUESTION:{query}\n\n------TEXT EXTRACTED:{results}."}
+            ],
+            temperature=0.1
+        )
+        return response.choices[0].message.content
+
+    def perform_response_with_questions(self, query, results, prompt, questions):
+        """Generate a final response (GPT-based) using the retrieved texts and user query."""
+        response = self.client_openai.chat.completions.create(
+            model="gpt-4o",
+            messages=[
+                {"role": "system", "content": f"{prompt}"},
+                {"role": "user", "content": f"\n\n\n-----QUERY:{query}\n\nSUPPLEMENTARY QUESTIONS:{questions}.\n\n------VECTOR RESULTS:{results}.\n\nANSWER:"},
             ],
             temperature=0.1
         )
@@ -250,17 +303,17 @@ class AthenaSearch:
         High-level method that runs the entire pipeline:
         1. Generate conversation history
         2. Regenerate user query
-        3. Extract entities
-            3.1 Search for entities in the entity index
-        4. Generate a Cypher query
-        5. Execute query in Neo4j to retrieve IDs
-        6. Perform abstract-level Vector IDs search
-        7. Combine IDs
-        8. Filter Body index search by those IDs
-        9. Rerank results
-        10. Generate final response
+        3. Perform abstract-level Vector IDs search
+        4. Combine IDs
+        5. Filter Body index search by those IDs
+        6. Rerank results
+        7. Generate final response
         """
         print("User Query:", self.user_query)
+
+        if False:
+        # 0. Translate the user query to English
+            self.user_query_ita = self.translate_to_english(self.user_query)
 
         # 1. Generate conversation history
         conversation_history = self.generate_history(self.user_query, self.conversation, self.HISTORY)
@@ -269,62 +322,68 @@ class AthenaSearch:
         regenerated_query = self.regenerate_query(self.user_query, conversation_history, self.REGENERATE_QUERY)
         print("Regenerated Query:", regenerated_query)
 
-        # 3. Extract Entities
-        entities_generated = self.generate_entities(
-            self.user_query, 
-            self.PROMPT_LLMentity_Extractor
-        )
-        print("Entities Extracted:", entities_generated)
-        list_of_entity = [item.strip() for item in entities_generated.strip("[]").split(",")]
-        print("List of Entities:", list_of_entity)
+        # 3. Generate sub-queries
+        SUB_QUERIES = self.sub_queries(regenerated_query, prompt=self.SUBQUERIES)
+        
+        # Process sub-queries in parallel
+        def process_subquery(subquery):
+            # 4. Perform abstract-level Vector IDs search
+            abstract_ids = self.perform_search_id(
+                subquery, 
+                self.index_abstract
+            )
+            print(f"Abstract IDs for '{subquery}':", abstract_ids)
+            
+            # 5. Combine the two sets of IDs (remove duplicates)
+            combined_ids = list(set(abstract_ids))
+            filtered_urls = [url for url in combined_ids if url is not None]
+            
+            # 6. Filter body index search by combined IDs
+            final_results = self.perform_search_with_filters(
+                subquery, 
+                self.index_body, 
+                filtered_urls
+            )
+            print(f"Final Results for '{subquery}':", final_results)
 
-        #3.1 Search for entities in the entity index
-        entities_extracted = ""
-        for i in list_of_entity:
-            entity = self.perform_search_for_entity(i, self.index_entity)
-            entities_extracted = entities_extracted + str(entity)
+            # 7. Rerank results
+            reranked_results = self.rerank_results(subquery, final_results)
+            return reranked_results
         
-        # 4. Generate a Cypher query
-        cypher_query = self.generate_cypher(
+        FINALS = []
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            # Submit all sub-queries to the executor and collect futures
+            future_to_subquery = {executor.submit(process_subquery, subquery): subquery for subquery in SUB_QUERIES}
+            
+            # Process results as they complete
+            for future in concurrent.futures.as_completed(future_to_subquery):
+                subquery = future_to_subquery[future]
+                try:
+                    results = future.result()
+                    FINALS.extend(results)
+                    print(f"Completed processing for: '{subquery}'")
+                except Exception as exc:
+                    print(f"Sub-query '{subquery}' generated an exception: {exc}")
+        
+        # Remove duplicates based on 'text'
+        FINALS_UNIQUE = {}
+        for entry in FINALS:
+            if entry['text'] not in FINALS_UNIQUE:
+                FINALS_UNIQUE[entry['text']] = entry
+        FINALS_UNIQUE = list(FINALS_UNIQUE.values())
+            
+        # 8. Generate final response
+        athena_response = self.perform_response_with_questions(
             regenerated_query, 
-            self.PROMPT_CYPHER_QUERY_BUILDER, 
-            entities_extracted
+            FINALS_UNIQUE, 
+            self.PROMPT_answer_2,
+            SUB_QUERIES
         )
-        print("Cypher Query Generated:", cypher_query)
-        
-        # 5. Execute the Cypher query and get a single ID result from the graph
-        graph_id_result = self.execute_query(cypher_query)
-        print("Graph ID Result:", graph_id_result)
-        
-        # 6. Get top IDs from abstract index
-        REG_ABSLEVQUERY = self.regenerate_query_DEEP(self.user_query, self.ABSLEVQUERY)
-        abstract_ids = self.perform_search_id(
-            REG_ABSLEVQUERY, 
-            self.index_abstract
-        )
-        print("Abstract IDs:", abstract_ids)
-        
-        # 7. Combine the two sets of IDs (remove duplicates)
-        combined_ids = list(set(abstract_ids + [graph_id_result]))
-        filtered_urls = [url for url in combined_ids if url is not None]
-        
-        # 8. Filter body index search by combined IDs
-        REG_TXTLEVQUERY = self.regenerate_query_DEEP(self.user_query, self.TXTLEVQUERY)
-        final_results = self.perform_search_with_filters(
-            REG_TXTLEVQUERY, 
-            self.index_body, 
-            filtered_urls
-        )
-        print("Final Results:", final_results)
 
-        # 9. Rerank results
-        reranked_results = self.rerank_results(regenerated_query, final_results)
+        #11. Translate the final response to Italian
+        if False:
+            athena_response_ita = self.translate_to_italian(athena_response)
         
-        # 10. Generate final response
-        athena_response = self.perform_response(
-            regenerated_query, 
-            reranked_results, 
-            self.PROMPT_answer
-        )
-        
-        return athena_response, combined_ids
+        # For compatibility with the return signature, use the last combined_ids
+        # (This might need to be adjusted based on your needs)
+        return athena_response
