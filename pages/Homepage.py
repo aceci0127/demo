@@ -141,8 +141,8 @@ with col2:
           <div class="card">
               <h3>Copper</h3>
               <ul>
-                <li>Tema 1</li>
-                <li>Tema 2</li>
+                <li>... database on costrunction ...</li>
+                <li>... database on costrunction ...</li>
               </ul>
           </div>
         </a>
@@ -154,8 +154,8 @@ with col3:
           <div class="card">
               <h3>Barriere Termiche</h3>
               <ul>
-                <li>Tema 1</li>
-                <li>Tema 2</li>
+                <li>Barriere Termiche e le loro applicazioni.</li>
+                <li>Proprietà e caratteristiche delle barriere termiche.</li>
               </ul>
           </div>
         </a>
