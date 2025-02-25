@@ -141,8 +141,8 @@ with col2:
           <div class="card">
               <h3>Copper</h3>
               <ul>
-                <li>... database on costrunction ...</li>
-                <li>... database on costrunction ...</li>
+                <li>... database on construction ...</li>
+                <li>... database on construction ...</li>
               </ul>
           </div>
         </a>
