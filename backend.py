@@ -385,6 +385,4 @@ class AthenaSearch:
         if False:
             athena_response_ita = self.translate_to_italian(athena_response)
         
-        # For compatibility with the return signature, use the last combined_ids
-        # (This might need to be adjusted based on your needs)
         return athena_response
