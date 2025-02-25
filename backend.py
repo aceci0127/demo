@@ -303,11 +303,12 @@ class AthenaSearch:
         High-level method that runs the entire pipeline:
         1. Generate conversation history
         2. Regenerate user query
-        3. Perform abstract-level Vector IDs search
-        4. Combine IDs
-        5. Filter Body index search by those IDs
-        6. Rerank results
-        7. Generate final response
+        3. Generate sub-queries
+            4. Perform abstract-level Vector IDs search
+            5. Combine IDs
+            6. Filter Body index search by those IDs
+            7. Rerank results
+        8. Generate final response
         """
         print("User Query:", self.user_query)
 
