@@ -365,6 +365,7 @@ class AthenaSearch:
         )
 
         #11. Translate the final response to Italian
-        #athena_response_ita = self.translate_to_italian(athena_response)
+        if False:
+            athena_response_ita = self.translate_to_italian(athena_response)
         
         return athena_response, combined_ids
