@@ -395,8 +395,8 @@ class AthenaSearch:
         print(f"Time taken to generate the final response: {time.time() - start_time} seconds")
 
         #11. Translate the final response to Italian
-        if True:
-            athena_response_ita = self.translate_to_italian(athena_response)
+        
+        athena_response_ita = self.translate_to_italian(athena_response)
         
         end_time = time.time()
         print(f"Time taken to complete the pipeline: {end_time - start_time} seconds")
