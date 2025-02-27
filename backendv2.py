@@ -27,7 +27,7 @@ class AthenaSearch:
         self.DEEPSEEK_API_KEY = st.secrets['DEEPSEEK_API_KEY']
         self.PINECONE_API_KEY = st.secrets["PINECONE_API_KEY"]
         self.GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]
-        
+
         # OpenAI and DeepSeek clients
         self.client_openai = openai.OpenAI(api_key=self.OPENAI_API_KEY)
         self.client_deepseek = openai.OpenAI(
@@ -82,6 +82,7 @@ class AthenaSearch:
         
         with open("prompts/FINALSADVANCED.txt", "r") as file:
             self.FINALSADVANCED = file.read()
+
 
     def rerank_results(self, query, docs):
         rerank_name = "cohere-rerank-3.5"
