@@ -7,6 +7,7 @@ from pinecone import Pinecone
 from dotenv import load_dotenv
 import streamlit as st
 import concurrent.futures
+from google import genai
 
 class AthenaSearch:
     def __init__(self, user_query, index_body, index_abstract, conversation=""):
@@ -32,7 +33,7 @@ class AthenaSearch:
             api_key=self.DEEPSEEK_API_KEY, 
             base_url="https://api.deepseek.com"
         )
-        self.client_gemini = openai.OpenAI(
+        self.client_gemini = genai.Client(
             api_key=self.GEMINI_API_KEY,
         )
         
