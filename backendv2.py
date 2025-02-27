@@ -329,8 +329,7 @@ class AthenaSearch:
         def process_subquery(subquery):
             results_with_filters = self.perform_search(
                 subquery, 
-                self.index_body
-            )
+                self.index_body)
 
             # Rerank results
             reranked_results = self.rerank_results(subquery, results_with_filters)

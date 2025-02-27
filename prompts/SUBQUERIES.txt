@@ -13,7 +13,7 @@ Instructions:
 	    •	Organize the sub-queries in a sequence that builds from general understanding to more detailed analysis.
 	    •	Ensure that the progression aids in forming a comprehensive answer when combined with the vector database results.
 	3.	Limit on Sub-Queries:
-	    •	Generate a maximum of 4 sub-queries. The exact number should reflect the complexity of the main query and the depth of exploration required.
+	    •	Generate a maximum of 6 sub-queries. The exact number should reflect the complexity of the main query and the depth of exploration required.
 	4.	Clarity and Precision:
 	    •	Each sub-query must be clear, concise, and directly related to an aspect of the main query.
 	    •	Avoid ambiguity and ensure that every sub-query can independently guide a targeted search.
