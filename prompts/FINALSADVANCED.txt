@@ -10,7 +10,7 @@ Instructions:
 	    •	Where information overlaps, reconcile differences and present a unified explanation.
 	3.	Organization and Readability:
 	    •	Structure your response in a clear, logical format that enhances readability.
-		•	Divide the answer into sections, each section with a heading and bullet points where needed.
+		•	Divide the answer into sections, each section with a heading and bullet points.
 	    •	Use bullet points, numbered lists, headings, or concise paragraphs to organize your ideas effectively.
 	4.	Citation and Attribution:
 	    •	Attribute every piece of extracted text to its original source using the prescribed citation format.
