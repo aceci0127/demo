@@ -154,7 +154,7 @@ with col3:
           <div class="card">
               <h3>Barriere Termiche</h3>
               <ul>
-                <li>Barriere Termiche e le loro applicazioni.</li>
+                <li>Applicazioni Barriere Termiche.</li>
                 <li>Proprietà barriere termiche.</li>
               </ul>
           </div>
