@@ -84,6 +84,7 @@ class AthenaSearch:
             self.FINALSADVANCED = file.read()
 
 
+
     def rerank_results(self, query, docs):
         rerank_name = "cohere-rerank-3.5"
         rerank_docs = self.pc.inference.rerank(
