@@ -357,7 +357,11 @@ class AthenaSearch:
 
             # 7. Rerank results
             reranked_results = self.rerank_results(subquery, final_results)
-            return finalContent
+
+            # 8. Generate final response of the subquery
+            answer = self.GEMINI_FUNCTION(self.PROMPT_answer_2 + "\n\n--USER QUERY: " + subquery + "\n\n--VECTOR RESULTS: "+str(reranked_results))
+            
+            return answer
         
         SQA = []
         with concurrent.futures.ThreadPoolExecutor() as executor:
