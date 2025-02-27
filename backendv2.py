@@ -33,9 +33,8 @@ class AthenaSearch:
             api_key=self.DEEPSEEK_API_KEY, 
             base_url="https://api.deepseek.com"
         )
-        self.client_gemini = genai.Client(
-            api_key=self.GEMINI_API_KEY,
-        )
+        
+        self.client_gemini = genai.Client(api_key=self.GEMINI_API_KEY)
         
         # Pinecone client
         self.pc = Pinecone(api_key=self.PINECONE_API_KEY)
