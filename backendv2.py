@@ -348,20 +348,21 @@ class AthenaSearch:
             filtered_urls = [url for url in combined_ids if url is not None]
             
             # 6. Filter body index search by combined IDs
-            final_results = self.perform_search_with_filters(
+            results_with_filters = self.perform_search_with_filters(
                 subquery, 
                 self.index_body, 
                 filtered_urls
             )
-            finalContent = "Subquery: " + subquery + "\n\nANSWER: " + final_results
-
             # 7. Rerank results
-            reranked_results = self.rerank_results(subquery, final_results)
+            reranked_results = self.rerank_results(subquery, results_with_filters)
 
             # 8. Generate final response of the subquery
             answer = self.GEMINI_FUNCTION(self.PROMPT_answer_2 + "\n\n--USER QUERY: " + subquery + "\n\n--VECTOR RESULTS: "+str(reranked_results))
-            
-            return answer
+
+            # 9. Return the final response of the subquery
+            finalContent = "Subquery: " + subquery + "\n\nANSWER: " + answer
+
+            return finalContent
         
         SQA = []
         with concurrent.futures.ThreadPoolExecutor() as executor:
