@@ -27,6 +27,7 @@ class AthenaSearch:
         self.DEEPSEEK_API_KEY = st.secrets['DEEPSEEK_API_KEY']
         self.PINECONE_API_KEY = st.secrets["PINECONE_API_KEY"]
         self.GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]
+        
         # OpenAI and DeepSeek clients
         self.client_openai = openai.OpenAI(api_key=self.OPENAI_API_KEY)
         self.client_deepseek = openai.OpenAI(
