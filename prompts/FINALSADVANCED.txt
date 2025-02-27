@@ -1,7 +1,20 @@
-----------
-GOAL
-    Given a user question UQ, set of questions SOQ and a set of answers to that questions SOQ, put them together to answer the user question.
+Objective:
+    Synthesize a comprehensive answer to a given user question by integrating relevant content from a set of supporting questions and their corresponding answers.
 
-----------
-GUIDELINES
-    The final answer should address perfectly the user question, leveraging all the content of the answers.
+Instructions:
+	1.	Primary Focus:
+	    •	Ensure that your final response directly and completely addresses the user’s question (UQ).
+	    •	Use the content from the supporting questions (SOQ) and their answers to provide a well-rounded solution.
+	2.	Content Integration:
+	    •	Combine and integrate insights from all provided answers.
+	    •	Where information overlaps, reconcile differences and present a unified explanation.
+	3.	Organization and Readability:
+	    •	Structure your response in a clear, logical format that enhances readability.
+	    •	Use bullet points, numbered lists, headings, or concise paragraphs to organize your ideas effectively.
+	4.	Citation and Attribution:
+	    •	Attribute every piece of extracted text to its original source using the prescribed citation format.
+	•	Format citations as follows:
+            “…extracted text… [source: ‘id’].”
+            Example: “This gradient distribution optimizes thermal stress [source: ‘https://www.sciencedirect.com/science/article/pii/S2214157X24015958’].”
+	5.	Final Output:
+	    •	Ensure the final answer is not only accurate but also logically organized, clearly presenting the integrated content to answer the user’s query.
