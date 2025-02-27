@@ -17,5 +17,6 @@ Instructions:
 		•	Format citations as follows:
             “…extracted text… [source: ‘id’].”
 		Example: “This gradient distribution optimizes thermal stress [source: ‘https://www.sciencedirect.com/science/article/pii/S2214157X24015958’].”
+		•	Unify the citations when possible, for example if in a paragraph there are more citations of the same source, unify them into a single citation.!!
 	5.	Final Output:
 	    •	Ensure the final answer is not only accurate but also logically organized, clearly presenting the integrated content to answer the user’s query.

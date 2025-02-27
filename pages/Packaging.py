@@ -37,9 +37,10 @@ if prompt := st.chat_input("Ask Athena:", key="packaging_chat_input"):
         athena_instance = AthenaSearch(prompt, index_body, index_abstract, st.session_state.conversation_packaging)
         athena_answer = athena_instance.run_pipeline()
 
+        if True:    
         # PIPELINE FROM BACKEND (Athena)
-        athena_instancev2 = AthenaSearchv2(prompt, index_body, index_abstract, st.session_state.conversation_packaging)
-        athena_answerv2 = athena_instancev2.run_pipeline()
+            athena_instancev2 = AthenaSearchv2(prompt, index_body, index_abstract, st.session_state.conversation_packaging)
+            athena_answerv2 = athena_instancev2.run_pipeline()
 
         if False:       
         # PIPELINE FROM GPT (ChatGPT)
