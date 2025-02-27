@@ -212,7 +212,7 @@ class AthenaSearch:
         vec = self.perform_embedding(input_text)
         query_results = index.query(
             vector=vec,
-            top_k=15,
+            top_k=20,
             include_values=False,
             include_metadata=True
         )
@@ -328,26 +328,12 @@ class AthenaSearch:
         
         # Process sub-queries in parallel
         def process_subquery(subquery):
-            # 4. Perform abstract-level Vector IDs search
-            abstract_ids = self.perform_search_id(
+            final_results = self.perform_search(
                 subquery, 
-                self.index_abstract
+                self.index_body
             )
-            print(f"Abstract IDs for '{subquery}':", abstract_ids)
-            
-            # 5. Combine the two sets of IDs (remove duplicates)
-            combined_ids = list(set(abstract_ids))
-            filtered_urls = [url for url in combined_ids if url is not None]
-            
-            # 6. Filter body index search by combined IDs
-            final_results = self.perform_search_with_filters(
-                subquery, 
-                self.index_body, 
-                filtered_urls
-            )
-            print(f"Final Results for '{subquery}':", final_results)
 
-            # 7. Rerank results
+            # Rerank results
             reranked_results = self.rerank_results(subquery, final_results)
             return reranked_results
         

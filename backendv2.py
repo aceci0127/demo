@@ -92,7 +92,7 @@ class AthenaSearch:
             model=rerank_name,
             query=query,
             documents=docs,
-            top_n=15,
+            top_n=10,
             return_documents=True
         )
         ids = [doc["document"]["id"] for doc in rerank_docs.data]
@@ -180,7 +180,7 @@ class AthenaSearch:
         noprompt = """
             Break down the given query into multiple logically structured sub-queries that progressively refine and explore different aspects of the main question. Ensure the sub-queries cover foundational concepts, key components, and step-by-step approaches where applicable.
             The number of subqueries should depend on the complexity of the main question and the depth of exploration required to provide a comprehensive answer.
-            Don't genereate more than 4 sub-queries.
+            Don't genereate more than 5 sub-queries.
             For example:
                 •	Input: How to build a RAG System?
                 •	Output:
@@ -222,7 +222,7 @@ class AthenaSearch:
         vec = self.perform_embedding(input_text)
         query_results = index.query(
             vector=vec,
-            top_k=15,
+            top_k=20,
             include_values=False,
             include_metadata=True
         )
@@ -340,29 +340,18 @@ class AthenaSearch:
         
         # Process sub-queries in parallel
         def process_subquery(subquery):
-            # 4. Perform abstract-level Vector IDs search
-            abstract_ids = self.perform_search_id(
+            results_with_filters = self.perform_search(
                 subquery, 
-                self.index_abstract
+                self.index_body
             )
-            
-            # 5. Combine the two sets of IDs (remove duplicates)
-            combined_ids = list(set(abstract_ids))
-            filtered_urls = [url for url in combined_ids if url is not None]
-            
-            # 6. Filter body index search by combined IDs
-            results_with_filters = self.perform_search_with_filters(
-                subquery, 
-                self.index_body, 
-                filtered_urls
-            )
-            # 7. Rerank results
+
+            # Rerank results
             reranked_results = self.rerank_results(subquery, results_with_filters)
 
-            # 8. Generate final response of the subquery
+            # Generate final response of the subquery
             answer = self.GEMINI_FUNCTION(self.PROMPT_answer_2 + "\n\n--USER QUERY: " + subquery + "\n\n--VECTOR RESULTS: "+str(reranked_results))
 
-            # 9. Return the final response of the subquery
+            # Return the final response of the subquery
             finalContent = "Subquery: " + subquery + "\n\nANSWER: " + answer
 
             return finalContent
