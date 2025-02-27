@@ -1,4 +1,4 @@
-from backend import AthenaSearch
+from backendv2 import AthenaSearch
 from llm import LLM
 import streamlit as st
 import time
@@ -45,17 +45,17 @@ if prompt := st.chat_input("Ask Athena:", key="packaging_chat_input"):
 
     # 3) Display both answers side by side in two columns
     cols = st.columns(2)
-    with cols[0]:
+    with cols[1]:
         st.subheader("ChatGPT")
         st.markdown(chatGPT_answer)
-    with cols[1]:
-        st.subheader("Athena")
+    with cols[0]:
+        st.subheader("ATHENA")
         st.markdown(athena_answer)
 
     # Append the assistant responses to the page-specific conversation
     st.session_state.conversation_packaging.append({
         "role": "ai",
-        "content": f"**ChatGPT:** {chatGPT_answer}\n\n**Athena:** {athena_answer}"
+        "content": f"**Answer:** {athena_answer}"
     })
 else:
     st.warning("Please enter a question before submitting.")

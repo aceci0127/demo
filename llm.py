@@ -48,7 +48,7 @@ class LLM:
         response = self.client_openai.chat.completions.create(
             model="gpt-4o",
             messages=[
-                {"role": "system", "content": f"Translate to italian. Do not change the meaning of the text and its details."},
+                {"role": "system", "content": f"Translate to italian. Do not change the meaning of the text and its details. Do not add any additionnal text, just the translation."},
                 {"role": "user", "content": f"\n\n\n-----TEXT:{query}"}
             ],
             temperature=0.1
