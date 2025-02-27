@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 import streamlit as st
 import concurrent.futures
 from google import genai
+import time
 
 class AthenaSearch:
     def __init__(self, user_query, index_body, index_abstract, conversation=""):
@@ -320,7 +321,7 @@ class AthenaSearch:
         8. Generate final response
         """
         print("User Query:", self.user_query)
-
+        start_time = time.time()
         if False:
         # 0. Translate the user query to English
             self.user_query_ita = self.translate_to_english(self.user_query)
@@ -330,7 +331,6 @@ class AthenaSearch:
 
         # 2. Regenerate user query
         regenerated_query = self.regenerate_query(self.user_query, conversation_history, self.REGENERATE_QUERY)
-        print("Regenerated Query:", regenerated_query)
 
         # 3. Generate sub-queries
         SUB_QUERIES = self.sub_queries(regenerated_query, prompt=self.SUBQUERIES)
@@ -342,7 +342,6 @@ class AthenaSearch:
                 subquery, 
                 self.index_abstract
             )
-            print(f"Abstract IDs for '{subquery}':", abstract_ids)
             
             # 5. Combine the two sets of IDs (remove duplicates)
             combined_ids = list(set(abstract_ids))
@@ -371,7 +370,6 @@ class AthenaSearch:
                 try:
                     results = future.result()
                     SQA.append(results)
-                    print(f"Completed processing for: '{subquery}'")
                 except Exception as exc:
                     print(f"Sub-query '{subquery}' generated an exception: {exc}")
         
@@ -394,9 +392,12 @@ class AthenaSearch:
         
         if True:
             athena_response = self.GEMINI_FUNCTION(self.FINALSADVANCED + "\n".join(SQA))
+        print(f"Time taken to generate the final response: {time.time() - start_time} seconds")
 
         #11. Translate the final response to Italian
         if True:
             athena_response_ita = self.translate_to_italian(athena_response)
         
+        end_time = time.time()
+        print(f"Time taken to complete the pipeline: {end_time - start_time} seconds")
         return athena_response_ita
