@@ -155,7 +155,7 @@ with col3:
               <h3>Barriere Termiche</h3>
               <ul>
                 <li>Applicazioni Barriere Termiche.</li>
-                <li>Proprietà barriere termiche.</li>
+                <li>Proprietà Barriere Termiche.</li>
               </ul>
           </div>
         </a>
