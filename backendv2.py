@@ -6,6 +6,7 @@ from neo4j import GraphDatabase
 from pinecone import Pinecone
 from dotenv import load_dotenv
 import streamlit as st
+import concurrent.futures
 
 class AthenaSearch:
     def __init__(self, user_query, index_body, index_abstract, conversation=""):
@@ -24,12 +25,15 @@ class AthenaSearch:
         self.OPENAI_API_KEY = st.secrets['OPENAI_API_KEY']
         self.DEEPSEEK_API_KEY = st.secrets['DEEPSEEK_API_KEY']
         self.PINECONE_API_KEY = st.secrets["PINECONE_API_KEY"]
-        
+        self.GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]
         # OpenAI and DeepSeek clients
         self.client_openai = openai.OpenAI(api_key=self.OPENAI_API_KEY)
         self.client_deepseek = openai.OpenAI(
             api_key=self.DEEPSEEK_API_KEY, 
             base_url="https://api.deepseek.com"
+        )
+        self.client_gemini = openai.OpenAI(
+            api_key=self.GEMINI_API_KEY,
         )
         
         # Pinecone client
@@ -74,6 +78,9 @@ class AthenaSearch:
         
         with open("prompts/SUBQUERIES.txt", "r") as file:
             self.SUBQUERIES = file.read()
+        
+        with open("prompts/FINALSADVANCED.txt", "r") as file:
+            self.FINALSADVANCED = file.read()
 
     def rerank_results(self, query, docs):
         rerank_name = "cohere-rerank-3.5"
@@ -242,12 +249,18 @@ class AthenaSearch:
         )
         return response.choices[0].message.content
     
+    def GEMINI_FUNCTION(self, prompt):
+        response = self.client_gemini.models.generate_content(
+        model="gemini-2.0-flash", contents=prompt
+        )
+        return response.text
+    
     def translate_to_italian(self, query):
         """Generate a final response (GPT-based) using the retrieved texts and user query."""
         response = self.client_openai.chat.completions.create(
             model="gpt-4o-mini",
             messages=[
-                {"role": "system", "content": f"Translate to italian. Do not change the meaning of the text and its details."},
+                {"role": "system", "content": f"Translate to italian. Do not change the meaning of the text and its details. Just translate the text, do not add any other text."},
                 {"role": "user", "content": f"\n\n\n-----TEXT:{query}"}
             ],
             temperature=0.1
@@ -302,16 +315,18 @@ class AthenaSearch:
         High-level method that runs the entire pipeline:
         1. Generate conversation history
         2. Regenerate user query
-        3. Perform abstract-level Vector IDs search
-        4. Combine IDs
-        5. Filter Body index search by those IDs
-        6. Rerank results
-        7. Generate final response
+        3. Generate sub-queries
+            4. Perform abstract-level Vector IDs search
+            5. Combine IDs
+            6. Filter Body index search by those IDs
+            7. Rerank results
+        8. Generate final response
         """
         print("User Query:", self.user_query)
 
+        if False:
         # 0. Translate the user query to English
-        #self.user_query = self.translate_to_english(self.user_query)
+            self.user_query_ita = self.translate_to_english(self.user_query)
 
         # 1. Generate conversation history
         conversation_history = self.generate_history(self.user_query, self.conversation, self.HISTORY)
@@ -322,15 +337,15 @@ class AthenaSearch:
 
         # 3. Generate sub-queries
         SUB_QUERIES = self.sub_queries(regenerated_query, prompt=self.SUBQUERIES)
-        FINALS = []
-        for i in SUB_QUERIES:
         
+        # Process sub-queries in parallel
+        def process_subquery(subquery):
             # 4. Perform abstract-level Vector IDs search
             abstract_ids = self.perform_search_id(
-                i, 
+                subquery, 
                 self.index_abstract
             )
-            print("Abstract IDs:", abstract_ids)
+            print(f"Abstract IDs for '{subquery}':", abstract_ids)
             
             # 5. Combine the two sets of IDs (remove duplicates)
             combined_ids = list(set(abstract_ids))
@@ -338,34 +353,53 @@ class AthenaSearch:
             
             # 6. Filter body index search by combined IDs
             final_results = self.perform_search_with_filters(
-                i, 
+                subquery, 
                 self.index_body, 
                 filtered_urls
             )
-            print("Final Results:", final_results)
+            finalContent = "Subquery: " + subquery + "\n\nANSWER: " + final_results
 
             # 7. Rerank results
-            reranked_results = self.rerank_results(i, final_results)
-            for f in reranked_results:
-                FINALS.append(f)
+            reranked_results = self.rerank_results(subquery, final_results)
+            return finalContent
         
-        # Remove duplicates based on 'text'
-        FINALS_UNIQUE = {}
-        for entry in FINALS:
-            if entry['text'] not in FINALS_UNIQUE:
-                FINALS_UNIQUE[entry['text']] = entry
-        FINALS_UNIQUE = list(FINALS_UNIQUE.values())
+        SQA = []
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            # Submit all sub-queries to the executor and collect futures
+            future_to_subquery = {executor.submit(process_subquery, subquery): subquery for subquery in SUB_QUERIES}
             
+            # Process results as they complete
+            for future in concurrent.futures.as_completed(future_to_subquery):
+                subquery = future_to_subquery[future]
+                try:
+                    results = future.result()
+                    SQA.append(results)
+                    print(f"Completed processing for: '{subquery}'")
+                except Exception as exc:
+                    print(f"Sub-query '{subquery}' generated an exception: {exc}")
+        
+        if False:
+        # Remove duplicates based on 'text'
+            FINALS_UNIQUE = {}
+            for entry in FINALS:
+                if entry['text'] not in FINALS_UNIQUE:
+                    FINALS_UNIQUE[entry['text']] = entry
+            FINALS_UNIQUE = list(FINALS_UNIQUE.values())
+
+        if False:
         # 8. Generate final response
-        athena_response = self.perform_response_with_questions(
-            regenerated_query, 
-            FINALS_UNIQUE, 
-            self.PROMPT_answer_2,
-            SUB_QUERIES
-        )
+            athena_response = self.perform_response_with_questions(
+                regenerated_query, 
+                FINALS_UNIQUE, 
+                self.PROMPT_answer_2,
+                SUB_QUERIES
+                )
+        
+        if True:
+            athena_response = self.GEMINI_FUNCTION(self.FINALSADVANCED + "\n".join(SQA))
 
         #11. Translate the final response to Italian
         if False:
             athena_response_ita = self.translate_to_italian(athena_response)
         
-        return athena_response, combined_ids
+        return athena_response

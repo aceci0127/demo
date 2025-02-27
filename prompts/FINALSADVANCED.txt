@@ -1,0 +1,7 @@
+----------
+GOAL
+    Given a user question UQ, set of questions SOQ and a set of answers to that questions SOQ, put them together to answer the user question.
+
+----------
+GUIDELINES
+    The final answer should address perfectly the user question, leveraging all the content of the answers.
