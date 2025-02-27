@@ -261,7 +261,10 @@ class AthenaSearch:
     
     def translate_to_italian(self, text):
         response = self.client_gemini.models.generate_content(
-        model="gemini-2.0-flash", contents="Translate to italian. Do not change the meaning of the text and its details. Do not add any additionnal text, just the translation. The text to translate is: " + text + "TRADUZIONE:"
+        model="gemini-2.0-flash", contents="""Translate to italian. 
+        Do not change the meaning of the text and its details and do not add any additionnal text, just the translation. 
+        Keep the format of the text as you receive it.
+        The text to translate is: """ + text + """TRADUZIONE: """
         )
         return response.text
 
