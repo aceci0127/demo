@@ -312,9 +312,9 @@ class AthenaSearch:
         """
         print("User Query:", self.user_query)
 
-        if False:
+        if True:
         # 0. Translate the user query to English
-            self.user_query_ita = self.translate_to_english(self.user_query)
+            self.user_query = self.translate_to_english(self.user_query)
 
         # 1. Generate conversation history
         conversation_history = self.generate_history(self.user_query, self.conversation, self.HISTORY)
@@ -368,7 +368,7 @@ class AthenaSearch:
         )
 
         #11. Translate the final response to Italian
-        if False:
+        if True:
             athena_response_ita = self.translate_to_italian(athena_response)
         
         return athena_response

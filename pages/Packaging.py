@@ -37,12 +37,12 @@ if prompt := st.chat_input("Ask Athena:", key="packaging_chat_input"):
         athena_instance = AthenaSearch(prompt, index_body, index_abstract, st.session_state.conversation_packaging)
         athena_answer = athena_instance.run_pipeline()
 
-        if True:    
+        if False:    
         # PIPELINE FROM BACKEND (Athena)
             athena_instancev2 = AthenaSearchv2(prompt, index_body, index_abstract, st.session_state.conversation_packaging)
             athena_answerv2 = athena_instancev2.run_pipeline()
 
-        if False:       
+        if True:       
         # PIPELINE FROM GPT (ChatGPT)
             chatGPT = LLM(prompt)
             chatGPT_answer = chatGPT.run_pipeline()
@@ -53,8 +53,8 @@ if prompt := st.chat_input("Ask Athena:", key="packaging_chat_input"):
     # 3) Display both answers side by side in two columns
     cols = st.columns(2)
     with cols[1]:
-        st.subheader("Modello 2")
-        st.markdown(athena_answerv2)
+        st.subheader("ChatGPT")
+        st.markdown(chatGPT_answer)
     with cols[0]:
         st.subheader("ATHENA")
         st.markdown(athena_answer)
