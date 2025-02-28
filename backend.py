@@ -244,13 +244,18 @@ class AthenaSearch:
         return response.choices[0].message.content
     
     def translate_to_italian(self, text):
-        response = self.client_gemini.models.generate_content(
-        model="gemini-2.0-flash", contents="""Translate to italian. 
-        Do not change the meaning of the text and its details and do not add any additionnal text, just the translation. 
-        Keep the format of the text as you receive it.
-        The text to translate is: """ + text + """TRADUZIONE: """
+        """Generate a final response (GPT-based) using the retrieved texts and user query."""
+        response = self.client_openai.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {"role": "system", "content": f"""Translate to italian. 
+                    Do not change the meaning of the text and its details and do not add any additionnal text, just the translation. 
+                    Keep the format of the text as you receive it."""},
+                {"role": "user", "content": f"\n\nTEXT TO TRANSLATE:{text}\n\nTRADUZIONE:"}
+            ],
+            temperature=0.1
         )
-        return response.text
+        return response.choices[0].message.content
 
     def perform_response(self, query, results, prompt):
         """Generate a final response (GPT-based) using the retrieved texts and user query."""
