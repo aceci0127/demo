@@ -371,4 +371,4 @@ class AthenaSearch:
         if True:
             athena_response_ita = self.translate_to_italian(athena_response)
         
-        return athena_response
+        return athena_response_ita
